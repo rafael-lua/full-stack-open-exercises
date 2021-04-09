@@ -1,0 +1,36 @@
+# I completed this exercise using the WebSequenceDiadrams (https://www.websequencediagrams.com/)
+
+title Full Stack open exercise 0.4
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over server:
+adds a new note 
+object to the list
+end note
+
+server-->browser: HTML-code with redirect location: /exampleapp/notes
+
+note over browser:
+executes an HTTP GET 
+on the redirect location
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server-->browser: main.js
+
+note over browser:
+executes js and requests JSON
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{ content: "<note content>", date: "<note date>" }, ...]
+
+note over browser:
+executes the callback to 
+show the notes on the page
+end note

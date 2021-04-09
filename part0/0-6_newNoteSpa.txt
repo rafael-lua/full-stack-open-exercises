@@ -1,0 +1,23 @@
+# I completed this exercise using the WebSequenceDiadrams (https://www.websequencediagrams.com/)
+
+title Full Stack open exercise 0.6
+
+note over browser:
+update the list
+of notes to show
+the new note
+end note
+
+browser->browser: form.onsubmit
+
+note over browser:
+send new note
+to the server
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server:
+add a new note 
+object to the server
+end note
