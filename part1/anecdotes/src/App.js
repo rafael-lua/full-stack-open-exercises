@@ -21,20 +21,28 @@ function App() {
       newAnec = Math.floor(Math.random() * anecdotes.length);
     }
     return newAnec;
-  }
+  };
 
   const voteAnecdote = (n) => {
     let newVotes = [...votes];
     newVotes[n] += 1;
     setVotes(newVotes);
-  }
+  };
+
+  const getTop = () => {
+    return votes.reduce((last, value, index, arr) => arr[last] >= arr[index] ? last : index , 0);
+  };
 
   return (
     <div>
+      <h1>Random Anecdotes</h1>
       <p>{anecdotes[selected]}</p>
       <p>Amount of votes: {votes[selected]}</p>
       <button onClick={() => {voteAnecdote(selected)}}>Vote</button>
       <button onClick={() => {setSelected(randomAnecdote(selected))}}>Next Anecdote</button>
+      <h2>Top Anecdote</h2>
+      <p>{anecdotes[getTop()]}</p>
+      <p>Votes: {votes[getTop()]}</p>
     </div>
   );
 }
