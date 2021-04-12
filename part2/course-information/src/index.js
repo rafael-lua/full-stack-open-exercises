@@ -5,4 +5,3 @@ ReactDOM.render(
   <App />,
   document.getElementById('root')
 );
-© 2021 GitHub, Inc.
