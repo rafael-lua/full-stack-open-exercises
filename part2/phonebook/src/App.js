@@ -12,10 +12,14 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault();
-    let newNameObject = {
-      name: newName
-    };
-    setPersons([...persons, newNameObject]);
+    if(persons.filter((value) => value.name === newName).length === 0) {
+      let newNameObject = {
+        name: newName
+      };
+      setPersons([...persons, newNameObject]);
+    } else {
+      window.alert(`${newName} is already on the list!`);
+    }
   }
 
   return (
