@@ -9,7 +9,7 @@ function App() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
-  const hook = () => {
+  const countryHook = () => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
@@ -17,7 +17,7 @@ function App() {
       })
   };
   
-  useEffect(hook, []);
+  useEffect(countryHook, []);
 
   const handleQueryChange = (e) => {
     setQuery(e.target.value);
