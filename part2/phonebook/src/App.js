@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import List from "./components/List";
 import Filter from "./components/Filter";
 import Add from "./components/Add";
 
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', phone: '1-123-1234567' },
-    { name: 'Edron Arthur', phone: '1-565-416879' },
-    { name: 'Lucy Millena', phone: '1-5489-564469' },
-    { name: 'George Jr', phone: '1-1213-21668' },
-  ]); 
+  const [ persons, setPersons ] = useState([]); 
   const [ filter, setFilter ] = useState('');
   const [ newName, setNewName ] = useState('');
   const [ newPhone, setNewPhone ] = useState('');
+
+  const personsHook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data);
+      })
+  };
+  
+  useEffect(personsHook, []);
 
   const handleNameChange = (e) => {
     setNewName(e.target.value);
