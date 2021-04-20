@@ -27,13 +27,17 @@ function App() {
     return query !== "" ? results.filter((value) => value.name.toUpperCase().includes(query.toUpperCase())) : results;
   }
 
+  const showCountry = (name) => {
+    setQuery(name);
+  }
+
   return (
     <div>
       <Search query={query} handleQueryChange={handleQueryChange} />
       {
         filteredResults().length > 10 
         ? <p>Too many results, specify more...</p>
-        : <Results results={filteredResults()} />
+        : <Results results={filteredResults()} showCountry={showCountry} />
       }
     </div>
   );

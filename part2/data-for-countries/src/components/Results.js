@@ -1,6 +1,6 @@
 import Country from "./Country";
 
-const Results = ({results}) => {
+const Results = ({results, showCountry}) => {
   if(results.length === 0) {
     return <div>No results found with current filter.</div>
   }else if(results.length === 1) {
@@ -9,7 +9,12 @@ const Results = ({results}) => {
 
   return (
     <ul>
-      {results.map((value) => <li key={value.name}>{value.name}</li>)}
+      {results.map((value) => (
+        <li key={value.name}>
+          {value.name}
+          <button onClick={() => showCountry(value.name)}>Show</button>
+        </li>
+      ))}
     </ul>
   )
 }
