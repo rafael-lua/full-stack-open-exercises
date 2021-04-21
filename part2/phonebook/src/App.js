@@ -41,7 +41,13 @@ const App = () => {
         name: newName,
         phone: newPhone
       };
-      setPersons([...persons, newPerson]);
+
+      axios
+        .post("http://localhost:3001/persons", newPerson)
+        .then((response) => {
+          console.log("New entry created!");
+          setPersons([...persons, response.data]);
+        });
     } else {
       window.alert(`${newName} is already on the list!`);
     }
