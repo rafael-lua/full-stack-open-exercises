@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
+import phoneService from "./services/phones";
 
 import List from "./components/List";
 import Filter from "./components/Filter";
@@ -13,10 +14,10 @@ const App = () => {
   const [ newPhone, setNewPhone ] = useState('');
 
   const personsHook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
+    phoneService
+      .getAll()
+      .then(initialValues => {
+        setPersons(initialValues);
       })
   };
   
@@ -42,11 +43,11 @@ const App = () => {
         phone: newPhone
       };
 
-      axios
-        .post("http://localhost:3001/persons", newPerson)
-        .then((response) => {
+      phoneService
+        .create(newPerson)
+        .then((newEntry) => {
           console.log("New entry created!");
-          setPersons([...persons, response.data]);
+          setPersons([...persons, newEntry]);
         });
     } else {
       window.alert(`${newName} is already on the list!`);
