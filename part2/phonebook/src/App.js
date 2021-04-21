@@ -54,6 +54,18 @@ const App = () => {
     }
   }
 
+  const handleDelete = (id) => {
+    const result = window.confirm(`Are you sure you want to remove: ${persons.find((p) => p.id === id).name}`);
+    if(result === true) {
+      phoneService
+        .remove(id)
+        .then(() => {
+          console.log(`Entry ${id} removed.`);
+          setPersons(persons.filter((p) => p.id !== id));
+        })
+    }
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -66,7 +78,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <List persons={persons} filter={filter} />
+      <List persons={persons} filter={filter} handleDelete={handleDelete} />
 
     </div>
   )
