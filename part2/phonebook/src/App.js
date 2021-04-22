@@ -94,7 +94,6 @@ const App = () => {
 
   const updatePerson = (id) => {
     let updatedPerson = {...persons.find((p) => p.id === id), number: newPhone};
-    console.log(updatedPerson);
 
     phoneService
       .update(id, updatedPerson)
@@ -110,6 +109,19 @@ const App = () => {
           setNotificationType(null);
         }, 5000);
         setPersons(persons.map((p) => p.id === newEntry.id ? newEntry : p));
+      })
+      .catch(error => {
+        setNotification(
+          "Entry doesn't exist."
+        );
+        setNotificationType(
+          "error"
+        );
+        setTimeout(() => {
+          setNotification(null);
+          setNotificationType(null);
+        }, 5000);
+        setPersons(persons.filter((p) => p.id !== updatedPerson.id));
       });
   }
 
