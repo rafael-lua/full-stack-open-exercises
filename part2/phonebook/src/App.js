@@ -5,6 +5,7 @@ import phoneService from "./services/phones";
 import List from "./components/List";
 import Filter from "./components/Filter";
 import Add from "./components/Add";
+import Notification from "./components/Notification";
 
 
 const App = () => {
@@ -12,6 +13,8 @@ const App = () => {
   const [ filter, setFilter ] = useState('');
   const [ newName, setNewName ] = useState('');
   const [ newPhone, setNewPhone ] = useState('');
+  const [ notification, setNotification ] = useState(null);
+  const [ notificationType, setNotificationType ] = useState(null);
 
   const personsHook = () => {
     phoneService
@@ -46,7 +49,16 @@ const App = () => {
       phoneService
         .create(newPerson)
         .then((newEntry) => {
-          console.log("New entry created!");
+          setNotification(
+            `New entry ${newEntry.name} was created!`
+          );
+          setNotificationType(
+            "success"
+          );
+          setTimeout(() => {
+            setNotification(null);
+            setNotificationType(null);
+          }, 5000);
           setPersons([...persons, newEntry]);
         });
     } else {
@@ -59,12 +71,22 @@ const App = () => {
   }
 
   const handleDelete = (id) => {
-    const result = window.confirm(`Are you sure you want to remove: ${persons.find((p) => p.id === id).name}`);
+    let personName = persons.find((p) => p.id === id).name;
+    const result = window.confirm(`Are you sure you want to remove: ${personName}`);
     if(result === true) {
       phoneService
         .remove(id)
         .then(() => {
-          console.log(`Entry ${id} removed.`);
+          setNotification(
+            `Entry ${personName} was removed.`
+          );
+          setNotificationType(
+            "success"
+          );
+          setTimeout(() => {
+            setNotification(null);
+            setNotificationType(null);
+          }, 5000);
           setPersons(persons.filter((p) => p.id !== id));
         })
     }
@@ -77,7 +99,16 @@ const App = () => {
     phoneService
       .update(id, updatedPerson)
       .then((newEntry) => {
-        console.log(`Number of ${newEntry.name} was updated!`);
+        setNotification(
+          `Number of ${newEntry.name} was updated!`
+        );
+        setNotificationType(
+          "success"
+        );
+        setTimeout(() => {
+          setNotification(null);
+          setNotificationType(null);
+        }, 5000);
         setPersons(persons.map((p) => p.id === newEntry.id ? newEntry : p));
       });
   }
@@ -85,6 +116,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+
+      <Notification message={notification} type={notificationType} />
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
