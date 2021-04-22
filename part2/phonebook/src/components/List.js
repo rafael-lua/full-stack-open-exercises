@@ -5,12 +5,12 @@ const List = ({persons, filter, handleDelete}) => {
         filter.length === 0
         ? persons.map((value) => (
           <li key={value.id}>
-            {value.name} {value.phone} <button onClick={() => handleDelete(value.id)}>Delete</button>
+            {value.name} {value.number} <button onClick={() => handleDelete(value.id)}>Delete</button>
           </li>
         ))
         : persons.filter((value) => value.name.toUpperCase().includes(filter.toUpperCase())).map((value) => (
           <li key={value.id}>
-            {value.name} {value.phone} <button onClick={() => handleDelete(value.id)}>Delete</button>
+            {value.name} {value.number} <button onClick={() => handleDelete(value.id)}>Delete</button>
           </li>
         ))
       }

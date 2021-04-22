@@ -37,10 +37,10 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault();
-    if(persons.filter((value) => value.name === newName).length === 0) {
+    if(persons.filter((value) => value.name.toUpperCase() === newName.toUpperCase()).length === 0) {
       let newPerson = {
         name: newName,
-        phone: newPhone
+        number: newPhone
       };
 
       phoneService
@@ -50,7 +50,11 @@ const App = () => {
           setPersons([...persons, newEntry]);
         });
     } else {
-      window.alert(`${newName} is already on the list!`);
+      const result = window.confirm(`${newName} is already on the list! Do you want to update its phone number?`);
+      if(result === true) {
+        let personId = persons.find((value) => value.name.toUpperCase() === newName.toUpperCase()).id;
+        updatePerson(personId);
+      }
     }
   }
 
@@ -64,6 +68,18 @@ const App = () => {
           setPersons(persons.filter((p) => p.id !== id));
         })
     }
+  }
+
+  const updatePerson = (id) => {
+    let updatedPerson = {...persons.find((p) => p.id === id), number: newPhone};
+    console.log(updatedPerson);
+
+    phoneService
+      .update(id, updatedPerson)
+      .then((newEntry) => {
+        console.log(`Number of ${newEntry.name} was updated!`);
+        setPersons(persons.map((p) => p.id === newEntry.id ? newEntry : p));
+      });
   }
 
   return (
