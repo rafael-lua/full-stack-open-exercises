@@ -70,17 +70,30 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).json(
       { error: "Empty name" }
     );
+  } else if(body.number === undefined) {
+    return res.status(400).json(
+      { error: "Empty phone number" }
+    );
   }
 
-  let newPerson = {
-    "name": body.name,
-    "number": body.number === undefined ? "0-000-0000" : body.number,
-    "id": generateId()
+  let exists = !(persons.filter((p) => p.name.toUpperCase() === body.name.toUpperCase()).length === 0);
+
+  if (exists === true) {
+    return res.status(400).json(
+      { error: "Name already exist on the list!" }
+    );
   }
+  else {
+    let newPerson = {
+      "name": body.name,
+      "number": body.number,
+      "id": generateId()
+    }
 
-  persons = persons.concat(newPerson);
+    persons = persons.concat(newPerson);
 
-  res.json(newPerson);
+    res.json(newPerson);
+  }
 });
 
 const PORT = 3001;
