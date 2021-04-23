@@ -58,6 +58,31 @@ app.delete("/api/persons/:id", (req, res) => {
   res.status(204).end();
 });
 
+const generateId = () => {
+  let newId = Math.floor(Math.random() * 1000000) + 1;
+  return newId;
+}
+
+app.post("/api/persons", (req, res) => {
+  let body = req.body;
+  
+  if(body.name === undefined) {
+    return res.status(400).json(
+      { error: "Empty name" }
+    );
+  }
+
+  let newPerson = {
+    "name": body.name,
+    "number": body.number === undefined ? "0-000-0000" : body.number,
+    "id": generateId()
+  }
+
+  persons = persons.concat(newPerson);
+
+  res.json(newPerson);
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
