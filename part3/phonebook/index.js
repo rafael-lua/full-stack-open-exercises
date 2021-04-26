@@ -107,7 +107,7 @@ app.post("/api/persons", (req, res) => {
   }
 });
 
-const PORT = 3001;
+const PORT = (process.env.PORT === undefined || process.env.PORT === null) ? 3001 : process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 });
