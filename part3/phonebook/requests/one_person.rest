@@ -1,5 +1,5 @@
-GET http://localhost:3001/api/persons/1
+GET https://polar-citadel-35304.herokuapp.com/api/persons/1
 
 ###
 
-GET http://localhost:3001/api/persons/5
+GET https://polar-citadel-35304.herokuapp.com/api/persons/5
