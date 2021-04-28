@@ -44,10 +44,12 @@ app.get("/", (req, res) => {
   res.send("<h1>PHONEBOOK APP</h1>");
 });
 
-app.get("/api/persons", (req, res) => {
-  Person.find({}).then((persons) => {
-    res.json(persons);
-  });
+app.get("/api/persons", (req, res, next) => {
+  Person.find({})
+    .then((persons) => {
+      res.json(persons);
+    })
+    .catch((error) => {next(error)});
 });
 
 app.get("/info", (req, res) => {
@@ -68,11 +70,12 @@ app.get("/api/persons/:id", (req, res) => {
   }
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
     .then((result) => {
       res.status(204).end();
-    });
+    })
+    .catch((error) => {next(error)});
 
   // let id = parseInt(req.params.id);
   // persons = persons.filter((p) => p.id !== id);
@@ -103,10 +106,12 @@ app.post("/api/persons", (req, res) => {
     "number": body.number,
   });
 
-  person.save().then((newPerson) => {
-    console.log("New person saved!")
-    res.json(newPerson);
-  });
+  person.save()
+    .then((newPerson) => {
+      console.log("New person saved!")
+      res.json(newPerson);
+    })
+    .catch((error) => {next(error)});
 
   // let exists = !(persons.filter((p) => p.name.toUpperCase() === body.name.toUpperCase()).length === 0);
 
@@ -126,6 +131,20 @@ app.post("/api/persons", (req, res) => {
   //   res.json(newPerson);
   // }
 });
+
+/* --------------- Error middleware. It has to be the last one. -------------- */
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError') { // Handle CastErrors (https://mongoosejs.com/docs/api/mongooseerror.html)
+    return response.status(400).send({ error: 'Malformatted id' });
+  } 
+
+  next(error); // If not handled, forwards the error to express default handler.
+}
+
+app.use(errorHandler);
 
 // const PORT = (process.env.PORT === undefined || process.env.PORT === null) ? 3001 : process.env.PORT;
 const PORT = process.env.PORT;
