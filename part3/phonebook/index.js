@@ -75,42 +75,51 @@ app.delete("/api/persons/:id", (req, res) => {
   res.status(204).end();
 });
 
-const generateId = () => {
-  let newId = Math.floor(Math.random() * 1000000) + 1;
-  return newId;
-}
+// const generateId = () => {
+//   let newId = Math.floor(Math.random() * 1000000) + 1;
+//   return newId;
+// }
 
 app.post("/api/persons", (req, res) => {
   let body = req.body;
   
-  if(body.name === undefined) {
+  if(body.name === undefined || body.name === "") {
     return res.status(400).json(
       { error: "Empty name" }
     );
-  } else if(body.number === undefined) {
+  } else if(body.number === undefined || body.number === "") {
     return res.status(400).json(
       { error: "Empty phone number" }
     );
   }
 
-  let exists = !(persons.filter((p) => p.name.toUpperCase() === body.name.toUpperCase()).length === 0);
+  let person = new Person({
+    "name": body.name,
+    "number": body.number,
+  });
 
-  if (exists === true) {
-    return res.status(400).json(
-      { error: "Name already exist on the list!" }
-    );
-  }
-  else {
-    let newPerson = {
-      "name": body.name,
-      "number": body.number,
-      "id": generateId()
-    }
-
-    persons = persons.concat(newPerson);
-
+  person.save().then((newPerson) => {
+    console.log("New person saved!")
     res.json(newPerson);
-  }
+  });
+
+  // let exists = !(persons.filter((p) => p.name.toUpperCase() === body.name.toUpperCase()).length === 0);
+
+  // if (exists === true) {
+  //   return res.status(400).json(
+  //     { error: "Name already exist on the list!" }
+  //   );
+  // }
+  // else {
+  //   let newPerson = {
+  //     "name": body.name,
+  //     "number": body.number,
+  //   }
+
+  //   persons = persons.concat(newPerson);
+
+  //   res.json(newPerson);
+  // }
 });
 
 // const PORT = (process.env.PORT === undefined || process.env.PORT === null) ? 3001 : process.env.PORT;
