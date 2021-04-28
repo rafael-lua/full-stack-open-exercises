@@ -69,10 +69,15 @@ app.get("/api/persons/:id", (req, res) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  let id = parseInt(req.params.id);
-  persons = persons.filter((p) => p.id !== id);
+  Person.findByIdAndDelete(req.params.id)
+    .then((result) => {
+      res.status(204).end();
+    });
 
-  res.status(204).end();
+  // let id = parseInt(req.params.id);
+  // persons = persons.filter((p) => p.id !== id);
+
+  // res.status(204).end();
 });
 
 // const generateId = () => {
