@@ -40,7 +40,7 @@ const Person = require("./models/phone");
 //   }
 // ];
 
-app.get("/", (req, res) => {
+app.get("/", (req, res, next) => {
   res.send("<h1>PHONEBOOK APP</h1>");
 });
 
@@ -52,7 +52,7 @@ app.get("/api/persons", (req, res, next) => {
     .catch((error) => {next(error)});
 });
 
-app.get("/info", (req, res) => {
+app.get("/info", (req, res, next) => {
   let date = new Date();
   Person.find({}).then((persons) => {
     let amount = persons.length;
@@ -61,7 +61,7 @@ app.get("/info", (req, res) => {
   .catch((error) => {next(error)});
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id).then((person) => {
     if(person !== null) {
       res.json(person);
@@ -115,7 +115,7 @@ app.put("/api/persons/:id", (req, res, next) => {
     .catch((error) => {next(error)});
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   let body = req.body;
   
   if(body.name === undefined || body.name === "") {
@@ -166,7 +166,10 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') { // Handle CastErrors (https://mongoosejs.com/docs/api/mongooseerror.html)
     return response.status(400).send({ error: 'Malformatted id' });
-  } 
+  } else if (error.name === "ValidationError") {
+    console.log("--- Validation error ---");
+    return response.status(400).send({ error: error.message });
+  }
 
   next(error); // If not handled, forwards the error to express default handler.
 }
