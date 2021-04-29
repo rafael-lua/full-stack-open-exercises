@@ -54,20 +54,33 @@ app.get("/api/persons", (req, res, next) => {
 
 app.get("/info", (req, res) => {
   let date = new Date();
-  let amount = persons.length;
-  res.send(`<p>Phobook has info for a total of ${amount} people.</p>${date}`);
+  Person.find({}).then((persons) => {
+    let amount = persons.length;
+    res.send(`<p>Phonebook has info for a total of ${amount} people.</p>${date}`);
+  })
+  .catch((error) => {next(error)});
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  let id = parseInt(req.params.id);
-  let person = persons.find((p) => p.id === id);
+  Person.findById(req.params.id).then((person) => {
+    if(person !== null) {
+      res.json(person);
+    }
+    else {
+      res.status(404).end();
+    }
+  })
+  .catch((error) => {next(error)});
 
-  if(person !== undefined) {
-    res.json(person);
-  }
-  else {
-    res.status(404).end();
-  }
+  // let id = parseInt(req.params.id);
+  // let person = persons.find((p) => p.id === id);
+
+  // if(person !== undefined) {
+  //   res.json(person);
+  // }
+  // else {
+  //   res.status(404).end();
+  // }
 });
 
 app.delete("/api/persons/:id", (req, res, next) => {
