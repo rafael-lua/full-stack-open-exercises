@@ -87,7 +87,6 @@ app.put("/api/persons/:id", (req, res, next) => {
   let body = req.body;
 
   if(body.number === undefined || body.number === "") {
-    console.log("Not updated!");
     return res.status(400).json({ error: "Empty phone number" });
   };
 
@@ -98,7 +97,6 @@ app.put("/api/persons/:id", (req, res, next) => {
 
   Person.findByIdAndUpdate(req.params.id, person, { new: true })
     .then((updatedPerson) => {
-      console.log("Updated?");
       response.json(updatedPerson);
     })
     .catch((error) => {next(error)});
