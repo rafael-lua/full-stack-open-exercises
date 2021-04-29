@@ -60,6 +60,19 @@ const App = () => {
             setNotificationType(null);
           }, 5000);
           setPersons([...persons, newEntry]);
+        })
+        .catch((error) => {
+          let errorResponse = error.response || {data: { error: "No error response!"}};
+          setNotification(
+            `${errorResponse.data.error || "No error details."}`
+          );
+          setNotificationType(
+            "error"
+          );
+          setTimeout(() => {
+            setNotification(null);
+            setNotificationType(null);
+          }, 5000);
         });
     } else {
       const result = window.confirm(`${newName} is already on the list! Do you want to update its phone number?`);
@@ -89,6 +102,19 @@ const App = () => {
           }, 5000);
           setPersons(persons.filter((p) => p.id !== id));
         })
+        .catch((error) => {
+          let errorResponse = error.response || {data: { error: "No error response!"}};
+          setNotification(
+            `${errorResponse.data.error || "No error details."}`
+          );
+          setNotificationType(
+            "error"
+          );
+          setTimeout(() => {
+            setNotification(null);
+            setNotificationType(null);
+          }, 5000);
+        });
     }
   }
 
