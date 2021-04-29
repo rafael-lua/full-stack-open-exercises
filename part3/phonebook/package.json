@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "rebuild": "rm -rf build && cp ../phonebook-frontend/build .",
+    "rebuild": "rm -rf build && cp -r ../phonebook-frontend/build .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "rafael-lua",

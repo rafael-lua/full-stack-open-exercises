@@ -111,9 +111,9 @@ const App = () => {
         setPersons(persons.map((p) => p.id === newEntry.id ? newEntry : p));
       })
       .catch(error => {
-        console.log(error.response.data);
+        let errorResponse = error.response || {data: { error: "No error response!"}};
         setNotification(
-          `${error.response.data.error || "No error details."}`
+          `${errorResponse.data.error || "No error details."}`
         );
         setNotificationType(
           "error"
