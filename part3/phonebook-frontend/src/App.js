@@ -111,8 +111,9 @@ const App = () => {
         setPersons(persons.map((p) => p.id === newEntry.id ? newEntry : p));
       })
       .catch(error => {
+        console.log(error.response.data);
         setNotification(
-          "Entry doesn't exist."
+          `${error.response.data.error || "No error details."}`
         );
         setNotificationType(
           "error"
@@ -121,7 +122,7 @@ const App = () => {
           setNotification(null);
           setNotificationType(null);
         }, 5000);
-        setPersons(persons.filter((p) => p.id !== updatedPerson.id));
+        // setPersons(persons.filter((p) => p.id !== updatedPerson.id));
       });
   }
 

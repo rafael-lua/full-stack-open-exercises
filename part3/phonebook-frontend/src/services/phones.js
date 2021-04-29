@@ -3,7 +3,7 @@ const baseUrl = '/api/persons'; // Connect to backend
 
 const getAll = () => {
   const request = axios.get(baseUrl);
-  return request.then(response => response.data);
+  return request.then(response => response.data); // https://matthewaisthorpe.com.au/json-object-vs-json-array/
 }
 
 const create = (newObj) => {

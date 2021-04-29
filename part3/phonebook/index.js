@@ -7,11 +7,11 @@ const app = express();
 app.use(express.static("build"));
 app.use(express.json());
 
-morgan.token("post-data", function (req, res) { 
-  return req.method === "POST" ? JSON.stringify(req.body) : null;
+morgan.token("has-data", function (req, res) { 
+  return (req.method === "POST" || req.method === "PUT") ? JSON.stringify(req.body) : null;
 });
 
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms :post-data"));
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :has-data"));
 
 app.use(cors());
 
@@ -83,10 +83,26 @@ app.delete("/api/persons/:id", (req, res, next) => {
   // res.status(204).end();
 });
 
-// const generateId = () => {
-//   let newId = Math.floor(Math.random() * 1000000) + 1;
-//   return newId;
-// }
+app.put("/api/persons/:id", (req, res, next) => {
+  let body = req.body;
+
+  if(body.number === undefined || body.number === "") {
+    console.log("Not updated!");
+    return res.status(400).json({ error: "Empty phone number" });
+  };
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      console.log("Updated?");
+      response.json(updatedPerson);
+    })
+    .catch((error) => {next(error)});
+});
 
 app.post("/api/persons", (req, res) => {
   let body = req.body;
