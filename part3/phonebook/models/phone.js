@@ -11,15 +11,19 @@ mongoose.connect(url, {
 }).then(result => {
     console.log('Connected to MongoDB');
 }).catch((error) => {
-    console.log('Error connecting to MongoDB:', error.message)
+    console.log('Error connecting to MongoDB: ', error.message)
 });
 
 const phoneSchema = mongoose.Schema({
   name: {
     type: String,
+    minlength: 3,
     unique: true
   },
-  number: String
+  number: {
+    type: String,
+    minlength: 8
+  }
 });
 
 

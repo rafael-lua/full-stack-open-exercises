@@ -106,9 +106,14 @@ app.put("/api/persons/:id", (req, res, next) => {
   const person = {
     name: body.name,
     number: body.number
-  }
+  };
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  const opt = {
+    runValidators: true, // Activate validators for update methods (https://mongoosejs.com/docs/validation.html#update-validators)
+    new: true
+  }; 
+
+  Person.findByIdAndUpdate(req.params.id, person, opt)
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })
