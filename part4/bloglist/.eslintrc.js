@@ -35,6 +35,8 @@ module.exports = {
     "arrow-spacing": [
       "error", { "before": true, "after": true }
     ],
-    "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }]
+    "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }],
+    "space-before-function-paren": ["warn", "always"],
+    "keyword-spacing": ["warn"]
   }
 }

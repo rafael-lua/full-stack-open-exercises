@@ -1,3 +1,5 @@
+const _ = require("lodash")
+
 const dummy = (blogs) => {
   return 1
 }
@@ -5,8 +7,6 @@ const dummy = (blogs) => {
 const totalLikes = (blogs) => {
   if (blogs.length === 0) {
     return 0
-  } else if (blogs.length === 1) {
-    return blogs[0].likes
   } else {
     return blogs.reduce((total, blog) => {
       total += blog.likes
@@ -18,13 +18,6 @@ const totalLikes = (blogs) => {
 const favoriteBlog = (blogs) => {
   if (blogs.length === 0) {
     return null
-  } else if (blogs.length === 1) {
-    let fav = {
-      title: blogs[0].title,
-      author: blogs[0].author,
-      likes: blogs[0].likes
-    }
-    return fav
   } else {
     let bestBlog = blogs.reduce((bestBlog, currentBlog) => {
       return currentBlog.likes >= bestBlog.likes ? currentBlog : bestBlog
@@ -38,8 +31,38 @@ const favoriteBlog = (blogs) => {
   }
 }
 
+const getAuthor = (e) => {
+  return e.author
+}
+
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) { return null }
+
+  const blogsGroupedByAuthor = _.groupBy(blogs, getAuthor)
+  const authorWithTheMostBlogs = _.reduce(blogsGroupedByAuthor, (most, current) => {
+    return current.length >= most.length ? current : most
+  })
+
+  return { author: authorWithTheMostBlogs[0].author, blogs: authorWithTheMostBlogs.length }
+}
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) { return null }
+
+  const flatWithLikes = (e, key) => {
+    return { author: key, likes: e.reduce((total, current) => { return total + current.likes }, 0) }
+  }
+
+  const blogsGroupedByAuthor = _.groupBy(blogs, getAuthor)
+  const authorsListWithMostLikes = _.flatMap(blogsGroupedByAuthor, flatWithLikes)
+
+  return authorsListWithMostLikes.reduce((most, current) => { return current.likes >= most.likes ? current : most })
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs,
+  mostLikes
 }
