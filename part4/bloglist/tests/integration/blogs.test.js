@@ -114,6 +114,20 @@ describe("create a new blog", () => {
   })
 })
 
+describe("delete a blog", () => {
+  test("blog is removed from blog list after delete", async () => {
+    const blogsListBefore = await blogsHelper.blogsInDabatase()
+    const blogToDelete = blogsListBefore[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsListAfter = await blogsHelper.blogsInDabatase()
+    expect(blogsListAfter.length).toBe(blogsListBefore.length - 1)
+  })
+})
+
 afterAll(done => {
   // Closing the DB connection allows Jest to exit successfully.
   mongoose.connection.close()
