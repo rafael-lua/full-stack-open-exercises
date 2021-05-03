@@ -99,6 +99,19 @@ describe("create a new blog", () => {
     const addedBlogInDatabase = await Blog.findById(addedBlog.body.id)
     expect(addedBlogInDatabase.likes).toBe(0)
   })
+
+  test("status code 400 if title or url properties are missing on request ", async () => {
+    const newBlog = {
+      author: "Blog author 3",
+      likes: 0
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+  })
 })
 
 afterAll(done => {
