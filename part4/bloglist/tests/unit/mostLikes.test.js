@@ -1,14 +1,14 @@
-const favoriteBlog = require("../utils/list_helper").favoriteBlog
+const mostLikes = require("../../utils/list_helper").mostLikes
 
-describe("favorite blog", () => {
-  test("of empty list is null", () => {
+describe("most likes", () => {
+  test("should return null if array is empty", () => {
     const emptyBlogs = []
 
-    const result = favoriteBlog(emptyBlogs)
+    const result = mostLikes(emptyBlogs)
     expect(result).toBeNull()
   })
 
-  test("of list with only one value is this value", () => {
+  test("should return the author with most likes if array is 1 or more", () => {
     const oneBlog = [
       {
         _id: "5a422a851b54a676234d17f7",
@@ -19,18 +19,11 @@ describe("favorite blog", () => {
         __v: 0
       },
     ]
-
-    const fav = {
-      title: "React patterns",
+    const oneBlogAuthor = {
       author: "Michael Chan",
       likes: 7
     }
 
-    const result = favoriteBlog(oneBlog)
-    expect(result).toEqual(fav)
-  })
-
-  test("of list with many values is the last one with the most likes", () => {
     const manyBlogs = [
       {
         _id: "5a422a851b54a676234d17f7",
@@ -61,7 +54,7 @@ describe("favorite blog", () => {
         title: "First class tests",
         author: "Robert C. Martin",
         url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-        likes: 12,
+        likes: 10,
         __v: 0
       },
       {
@@ -81,15 +74,15 @@ describe("favorite blog", () => {
         __v: 0
       }
     ]
-
-    const fav = {
-      title: "First class tests",
-      author: "Robert C. Martin",
-      likes: 12
+    const manyBlogsAuthor = {
+      author: "Edsger W. Dijkstra",
+      likes: 17
     }
 
-    const result = favoriteBlog(manyBlogs)
-    expect(result).toEqual(fav)
+    const oneResult = mostLikes(oneBlog)
+    const manyResult = mostLikes(manyBlogs)
+    expect(oneResult).toEqual(oneBlogAuthor)
+    expect(manyResult).toEqual(manyBlogsAuthor)
   })
 
 })

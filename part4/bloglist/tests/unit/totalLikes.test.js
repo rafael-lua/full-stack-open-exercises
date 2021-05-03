@@ -1,14 +1,14 @@
-const mostBlogs = require("../utils/list_helper").mostBlogs
+const totalLikes = require("../../utils/list_helper").totalLikes
 
-describe("most blogs", () => {
-  test("should return null if array is empty", () => {
+describe("total likes", () => {
+  test("of empty list is zero", () => {
     const emptyBlogs = []
 
-    const result = mostBlogs(emptyBlogs)
-    expect(result).toBeNull()
+    const result = totalLikes(emptyBlogs)
+    expect(result).toBe(0)
   })
 
-  test("should return the author with most blogs if array is 1 or more", () => {
+  test("when list has only one blog, equals the likes of that", () => {
     const oneBlog = [
       {
         _id: "5a422a851b54a676234d17f7",
@@ -19,12 +19,13 @@ describe("most blogs", () => {
         __v: 0
       },
     ]
-    const oneBlogAuthor = {
-      author: "Michael Chan",
-      blogs: 1
-    }
 
-    const manyBlogs = [
+    const result = totalLikes(oneBlog)
+    expect(result).toBe(7)
+  })
+
+  test("of a bigger list is calculated right", () => {
+    const moreBlogs = [
       {
         _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
@@ -74,14 +75,8 @@ describe("most blogs", () => {
         __v: 0
       }
     ]
-    const manyBlogsAuthor = {
-      author: "Robert C. Martin",
-      blogs: 3
-    }
 
-    const oneResult = mostBlogs(oneBlog)
-    const manyResult = mostBlogs(manyBlogs)
-    expect(oneResult).toEqual(oneBlogAuthor)
-    expect(manyResult).toEqual(manyBlogsAuthor)
+    const result = totalLikes(moreBlogs)
+    expect(result).toBe(36)
   })
 })

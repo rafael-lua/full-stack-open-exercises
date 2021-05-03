@@ -1,14 +1,14 @@
-const mostLikes = require("../utils/list_helper").mostLikes
+const mostBlogs = require("../../utils/list_helper").mostBlogs
 
-describe("most likes", () => {
+describe("most blogs", () => {
   test("should return null if array is empty", () => {
     const emptyBlogs = []
 
-    const result = mostLikes(emptyBlogs)
+    const result = mostBlogs(emptyBlogs)
     expect(result).toBeNull()
   })
 
-  test("should return the author with most likes if array is 1 or more", () => {
+  test("should return the author with most blogs if array is 1 or more", () => {
     const oneBlog = [
       {
         _id: "5a422a851b54a676234d17f7",
@@ -21,7 +21,7 @@ describe("most likes", () => {
     ]
     const oneBlogAuthor = {
       author: "Michael Chan",
-      likes: 7
+      blogs: 1
     }
 
     const manyBlogs = [
@@ -75,14 +75,13 @@ describe("most likes", () => {
       }
     ]
     const manyBlogsAuthor = {
-      author: "Edsger W. Dijkstra",
-      likes: 17
+      author: "Robert C. Martin",
+      blogs: 3
     }
 
-    const oneResult = mostLikes(oneBlog)
-    const manyResult = mostLikes(manyBlogs)
+    const oneResult = mostBlogs(oneBlog)
+    const manyResult = mostBlogs(manyBlogs)
     expect(oneResult).toEqual(oneBlogAuthor)
     expect(manyResult).toEqual(manyBlogsAuthor)
   })
-
 })

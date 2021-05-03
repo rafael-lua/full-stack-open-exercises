@@ -1,14 +1,14 @@
-const totalLikes = require("../utils/list_helper").totalLikes
+const favoriteBlog = require("../../utils/list_helper").favoriteBlog
 
-describe("total likes", () => {
-  test("of empty list is zero", () => {
+describe("favorite blog", () => {
+  test("of empty list is null", () => {
     const emptyBlogs = []
 
-    const result = totalLikes(emptyBlogs)
-    expect(result).toBe(0)
+    const result = favoriteBlog(emptyBlogs)
+    expect(result).toBeNull()
   })
 
-  test("when list has only one blog, equals the likes of that", () => {
+  test("of list with only one value is this value", () => {
     const oneBlog = [
       {
         _id: "5a422a851b54a676234d17f7",
@@ -20,12 +20,18 @@ describe("total likes", () => {
       },
     ]
 
-    const result = totalLikes(oneBlog)
-    expect(result).toBe(7)
+    const fav = {
+      title: "React patterns",
+      author: "Michael Chan",
+      likes: 7
+    }
+
+    const result = favoriteBlog(oneBlog)
+    expect(result).toEqual(fav)
   })
 
-  test("of a bigger list is calculated right", () => {
-    const moreBlogs = [
+  test("of list with many values is the last one with the most likes", () => {
+    const manyBlogs = [
       {
         _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
@@ -55,7 +61,7 @@ describe("total likes", () => {
         title: "First class tests",
         author: "Robert C. Martin",
         url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-        likes: 10,
+        likes: 12,
         __v: 0
       },
       {
@@ -76,7 +82,14 @@ describe("total likes", () => {
       }
     ]
 
-    const result = totalLikes(moreBlogs)
-    expect(result).toBe(36)
+    const fav = {
+      title: "First class tests",
+      author: "Robert C. Martin",
+      likes: 12
+    }
+
+    const result = favoriteBlog(manyBlogs)
+    expect(result).toEqual(fav)
   })
+
 })
