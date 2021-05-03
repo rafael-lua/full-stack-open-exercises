@@ -100,7 +100,7 @@ describe("create a new blog", () => {
     expect(addedBlogInDatabase.likes).toBe(0)
   })
 
-  test("status code 400 if title or url properties are missing on request ", async () => {
+  test("return status code 400 if title or url properties are missing on request ", async () => {
     const newBlog = {
       author: "Blog author 3",
       likes: 0
@@ -111,6 +111,41 @@ describe("create a new blog", () => {
       .send(newBlog)
       .expect(400)
       .expect("Content-Type", /application\/json/)
+  })
+})
+
+describe("update a blog", () => {
+  test("return status code 400 if likes property is missing on request", async () => {
+    const blogList = await blogsHelper.blogsInDabatase()
+    const blogToUpdate = blogList[0]
+
+    const updateContent = {
+      author: "Blog author 0"
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updateContent)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  test("update the blog entry if likes property is sent correctly", async () => {
+    const blogListBefore = await blogsHelper.blogsInDabatase()
+    const blogToUpdate = blogListBefore[0]
+
+    const updateContent = {
+      likes: 123
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updateContent)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    const updatedBlog = await Blog.findById(blogToUpdate.id)
+    expect(updatedBlog.likes).toBe(123)
   })
 })
 

@@ -29,6 +29,28 @@ blogRoute.post("/", async (req, res, next) => {
   }
 })
 
+blogRoute.put("/:id", async (req, res, next) => {
+  try {
+    if (!req.body.likes) {
+      return res.status(400).json({ error: "Empty likes parameter" })
+    }
+
+    const blog = {
+      likes: req.body.likes
+    }
+
+    const opt = {
+      runValidators: true,
+      new: true
+    }
+
+    const updatedPerson = await Blog.findByIdAndUpdate(req.params.id, blog, opt)
+    res.status(200).json(updatedPerson)
+  } catch (error) {
+    next(error)
+  }
+})
+
 blogRoute.delete("/:id", async (req, res, next) => {
   try {
     await Blog.findByIdAndDelete(req.params.id)
