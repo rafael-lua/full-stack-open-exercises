@@ -82,6 +82,23 @@ describe("create a new blog", () => {
     const addedBlogInDatabase = await Blog.findById(addedBlog.body.id)
     expect(addedBlogInDatabase).toMatchObject(newBlog)
   })
+
+  test("likes default to 0 if the property is missing from request", async () => {
+    const newBlog = {
+      title: "Blog title 3",
+      author: "Blog author 3",
+      url: "myblog3.url",
+    }
+
+    const addedBlog = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    const addedBlogInDatabase = await Blog.findById(addedBlog.body.id)
+    expect(addedBlogInDatabase.likes).toBe(0)
+  })
 })
 
 afterAll(done => {

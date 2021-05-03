@@ -10,4 +10,15 @@ content-type: application/json
 
 ###
 
+POST http://localhost:3001/api/blogs
+content-type: application/json
+
+{
+    "title": "Blog title",
+    "author": "Blog author",
+    "url": "myblog.url"
+}
+
+###
+
 GET http://localhost:3001/api/blogs
