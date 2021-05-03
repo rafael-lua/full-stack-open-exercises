@@ -34,6 +34,14 @@ describe("get all blogs", () => {
 
     expect(blogsList.length).toBe(amountToCheck)
   })
+
+  test("all blogs should have the id property defined", async () => {
+    const blogList = await blogsHelper.blogsInDabatase()
+
+    blogList.forEach((blog) => {
+      expect(blog.id).toBeDefined()
+    })
+  })
 })
 
 afterAll(() => {
