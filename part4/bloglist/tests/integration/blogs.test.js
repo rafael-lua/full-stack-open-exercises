@@ -44,6 +44,48 @@ describe("get all blogs", () => {
   })
 })
 
-afterAll(() => {
+describe("create a new blog", () => {
+  test("blogs list is increased by 1 after creating a new entry", async () => {
+    const blogListBefore = await blogsHelper.blogsInDabatase()
+    const newBlog = {
+      title: "Blog title 3",
+      author: "Blog author 3",
+      url: "myblog3.url",
+      likes: 0
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    const blogListAfter = await blogsHelper.blogsInDabatase()
+
+    expect(blogListAfter.length).toBe(blogListBefore.length + 1)
+  })
+
+  test("new blog entry has the correct content saved on database", async () => {
+    const newBlog = {
+      title: "Blog title 3",
+      author: "Blog author 3",
+      url: "myblog3.url",
+      likes: 0
+    }
+
+    const addedBlog = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    const addedBlogInDatabase = await Blog.findById(addedBlog.body.id)
+    expect(addedBlogInDatabase).toMatchObject(newBlog)
+  })
+})
+
+afterAll(done => {
+  // Closing the DB connection allows Jest to exit successfully.
   mongoose.connection.close()
+  done()
 })

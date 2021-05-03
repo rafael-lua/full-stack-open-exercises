@@ -10,14 +10,14 @@ blogRoute.get("/", async (req, res, next) => {
   }
 })
 
-blogRoute.post("/", (req, res, next) => {
-  const blog = new Blog(req.body)
-
-  blog
-    .save()
-    .then((result) => {
-      res.status(201).json(result)
-    })
+blogRoute.post("/", async (req, res, next) => {
+  try {
+    const blog = new Blog(req.body)
+    const result = await blog.save()
+    res.status(201).json(result)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = blogRoute
