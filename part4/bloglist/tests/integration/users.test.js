@@ -5,11 +5,28 @@ const usersHelper = require("./helpers/usersHelper")
 
 const api = supertest(app)
 
-const User = require("../../models/user")
-
 beforeEach(async () => {
-  await User.deleteMany({})
-  await User.insertMany(usersHelper.initialUsers)
+  await usersHelper.clearUsersInDatabase()
+  await usersHelper.initializeUsersInDatabase()
+})
+
+describe("get all users", () => {
+  it("should return all users in json format", async () => {
+    await api
+      .get("/api/users")
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  it("should contain an array with the user's created blogs", async () => {
+    const response = await api
+      .get("/api/users")
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    const user = response.body[0]
+    expect(user).toHaveProperty("blogs")
+  })
 })
 
 describe("create new user", () => {

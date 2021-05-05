@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../../app")
 const blogsHelper = require("./helpers/blogsHelper")
+const usersHelper = require("./helpers/usersHelper")
 
 const api = supertest(app)
 
@@ -10,7 +11,11 @@ const Blog = require("../../models/blog")
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  const blogsToAdd = blogsHelper.initialBlogs
+  const validId = await usersHelper.validUserId()
+  const initialBlogsWithUser = blogsHelper.initialBlogs
+    .map((blog) => ({ ...blog, user: validId }))
+
+  const blogsToAdd = initialBlogsWithUser
     .map((blog) => new Blog(blog))
 
   const savePromises = blogsToAdd
@@ -25,6 +30,19 @@ describe("get all blogs", () => {
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/)
+  })
+
+  it("should have the creator's user information", async () => {
+    const response = await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    const blog = response.body[0]
+    expect(blog.user).toBeDefined()
+    expect(blog.user).toHaveProperty("id")
+    expect(blog.user).toHaveProperty("name")
+    expect(blog.user).toHaveProperty("username")
   })
 
   test("blogs list has the correct amount of blogs", async () => {
