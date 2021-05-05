@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../../app")
-const blogsHelper = require("./blogsHelper")
+const blogsHelper = require("./helpers/blogsHelper")
 
 const api = supertest(app)
 
@@ -165,6 +165,6 @@ describe("delete a blog", () => {
 
 afterAll(done => {
   // Closing the DB connection allows Jest to exit successfully.
-  mongoose.connection.close()
+  mongoose.disconnect()
   done()
 })
