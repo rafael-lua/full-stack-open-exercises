@@ -21,6 +21,9 @@ const usersInDatabase = async () => {
 const getRootUser = async () => {
   const rootUser = await User.findOne({ username: "root" })
   return rootUser.toJSON()
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#tojson_behavior
+  // Basically toJSON returns a object and this object is stringfied.
+  // In the case of this function, returns the object directly.
 }
 
 const clearUsersInDatabase = async () => {

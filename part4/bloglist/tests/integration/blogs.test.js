@@ -3,6 +3,7 @@ const supertest = require("supertest")
 const app = require("../../app")
 const blogsHelper = require("./helpers/blogsHelper")
 const usersHelper = require("./helpers/usersHelper")
+const loginHelper = require("./helpers/loginHelper")
 
 const api = supertest(app)
 
@@ -64,6 +65,9 @@ describe("get all blogs", () => {
 
 describe("create a new blog", () => {
   test("blogs list is increased by 1 after creating a new entry", async () => {
+    const rootUser = await usersHelper.getRootUser()
+    const validToken = loginHelper.generateValidToken(rootUser)
+
     const blogListBefore = await blogsHelper.blogsInDabatase()
     const newBlog = {
       title: "Blog title 3",
@@ -74,6 +78,7 @@ describe("create a new blog", () => {
 
     await api
       .post("/api/blogs")
+      .auth(validToken, { type: "bearer" })
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/)
@@ -84,6 +89,9 @@ describe("create a new blog", () => {
   })
 
   test("new blog entry has the correct content saved on database", async () => {
+    const rootUser = await usersHelper.getRootUser()
+    const validToken = loginHelper.generateValidToken(rootUser)
+
     const newBlog = {
       title: "Blog title 3",
       author: "Blog author 3",
@@ -93,15 +101,31 @@ describe("create a new blog", () => {
 
     const addedBlog = await api
       .post("/api/blogs")
+      .auth(validToken, { type: "bearer" })
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
     const addedBlogInDatabase = await Blog.findById(addedBlog.body.id)
-    expect(addedBlogInDatabase).toMatchObject(newBlog)
+
+    newBlog.user = rootUser.id
+
+    Object.keys(newBlog).forEach((key) => {
+      expect(addedBlogInDatabase[key]).toBeDefined()
+      if (key === "user") { // conversion check because mongoose objectid is weird
+        const userId = addedBlogInDatabase[key].toString()
+        expect(userId).toBe(newBlog[key])
+      } else {
+        expect(addedBlogInDatabase[key]).toBe(newBlog[key])
+      }
+    })
+
   })
 
   test("likes default to 0 if the property is missing from request", async () => {
+    const rootUser = await usersHelper.getRootUser()
+    const validToken = loginHelper.generateValidToken(rootUser)
+
     const newBlog = {
       title: "Blog title 3",
       author: "Blog author 3",
@@ -110,6 +134,7 @@ describe("create a new blog", () => {
 
     const addedBlog = await api
       .post("/api/blogs")
+      .auth(validToken, { type: "bearer" })
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/)

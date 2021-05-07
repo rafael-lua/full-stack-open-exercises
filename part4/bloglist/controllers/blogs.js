@@ -1,5 +1,8 @@
 const blogRoute = require("express").Router()
 const Blog = require("../models/blog")
+const User = require("../models/user")
+const jwt = require("jsonwebtoken")
+const config = require("../utils/config")
 
 blogRoute.get("/", async (req, res, next) => {
   try {
@@ -12,23 +15,40 @@ blogRoute.get("/", async (req, res, next) => {
   }
 })
 
+const getTokenFrom = (req) => {
+  const auth = req.get("authorization")
+  if (auth && auth.toLowerCase().startsWith("bearer ")) {
+    return auth.substring(7)
+  }
+  return null
+}
+
 blogRoute.post("/", async (req, res, next) => {
   try {
-    if (!req.body.title || !req.body.url) {
+    const body = req.body
+    const token = getTokenFrom(req)
+    const decodedToken = jwt.verify(token, config.SECRET)
+
+    if (!token || !decodedToken.id) { return res.status(401).json({ error: "Authentication not found or invalid" }) }
+
+    if (!body.title || !body.url) {
       res.status(400).json({ error: "Title or url not defined" })
     } else {
-      const blog = new Blog(req.body)
+      const user = await User.findById(decodedToken.id)
 
-      if (!blog.likes) {
-        blog.likes = 0
-      }
-
-      // temp
-      const User = require("../models/user")
-      const rootUser = await User.findOne({ username: "root" })
-      blog.user = rootUser._id
+      const blog = new Blog({
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: !body.likes ? 0 : body.likes,
+        user: user._id
+      })
 
       const result = await blog.save()
+
+      user.blogs = user.blogs.concat(result._id)
+      await user.save()
+
       res.status(201).json(result)
     }
   } catch (error) {

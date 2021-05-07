@@ -3,7 +3,8 @@ GET http://localhost:3001/api/blogs
 ###
 
 POST http://localhost:3001/api/blogs
-content-type: application/json
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwOTJjM2UxMmM3MGU0MmNjMDIwNzVhYiIsImlhdCI6MTYyMDQwNTE2OCwiZXhwIjoxNjIwNDA4NzY4fQ.PwZypRJMSSmtQ0FoHVWm4yumN8pMztsN7RyYvIXp014
 
 {
     "title": "Blog title",

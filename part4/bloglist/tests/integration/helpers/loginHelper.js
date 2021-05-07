@@ -10,6 +10,22 @@ const verifyUser = (token) => {
   }
 }
 
+const generateValidToken = (user) => {
+  const userForToken = {
+    username: user.username,
+    id: user.id
+  }
+
+  const token = jwt.sign(
+    userForToken,
+    config.SECRET,
+    { expiresIn: 60*60 } // One hour expiration
+  )
+
+  return token
+}
+
 module.exports = {
-  verifyUser
+  verifyUser,
+  generateValidToken
 }
