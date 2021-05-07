@@ -1,5 +1,7 @@
 const logger = require("./logger")
 const morgan = require("morgan")
+const jwt = require("jsonwebtoken")
+const config = require("./config")
 
 morgan.token("has-data", function (req) {
   return (req.method === "POST" || req.method === "PUT") ? JSON.stringify(req.body) : null
@@ -37,9 +39,19 @@ const jwtTokenExtractor = (req, res, next) => {
   next()
 }
 
+const userExtractor = (req, res, next) => {
+  req.user = null
+  if (req.body.token) {
+    req.user = jwt.verify(req.body.token, config.SECRET)
+  }
+
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  jwtTokenExtractor
+  jwtTokenExtractor,
+  userExtractor
 }

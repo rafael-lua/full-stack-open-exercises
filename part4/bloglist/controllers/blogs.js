@@ -1,8 +1,6 @@
 const blogRoute = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
-const jwt = require("jsonwebtoken")
-const config = require("../utils/config")
 
 blogRoute.get("/", async (req, res, next) => {
   try {
@@ -15,20 +13,14 @@ blogRoute.get("/", async (req, res, next) => {
   }
 })
 
-// const getTokenFrom = (req) => {
-//   const auth = req.get("authorization")
-//   if (auth && auth.toLowerCase().startsWith("bearer ")) {
-//     return auth.substring(7)
-//   }
-//   return null
-// }
-
 blogRoute.post("/", async (req, res, next) => {
   try {
     const body = req.body
-    const decodedToken = jwt.verify(body.token, config.SECRET)
+    const userAuth = req.user
 
-    if (!body.token || !decodedToken.id) { return res.status(401).json({ error: "Authentication not found or invalid" }) }
+    if (!userAuth) {
+      return res.status(401).json({ error: "Authentication not found or invalid" })
+    }
 
     if (!body.title || !body.url) {
       res.status(400).json({ error: "Title or url not defined" })
@@ -38,12 +30,12 @@ blogRoute.post("/", async (req, res, next) => {
         author: body.author,
         url: body.url,
         likes: !body.likes ? 0 : body.likes,
-        user: decodedToken.id
+        user: userAuth.id
       })
 
       const result = await blog.save()
 
-      const user = await User.findById(decodedToken.id)
+      const user = await User.findById(userAuth.id)
       user.blogs = user.blogs.concat(result._id)
       await user.save()
 
@@ -78,15 +70,14 @@ blogRoute.put("/:id", async (req, res, next) => {
 
 blogRoute.delete("/:id", async (req, res, next) => {
   try {
-    const body = req.body
-    const decodedToken = jwt.verify(body.token, config.SECRET)
+    const userAuth = req.user
 
-    if (!body.token || !decodedToken.id) {
+    if (!userAuth) {
       return res.status(401).json({ error: "Authentication not found or invalid" })
     }
 
     const blog = await Blog.findById(req.params.id)
-    if (decodedToken.id !== blog.user.toString()) {
+    if (userAuth.id !== blog.user.toString()) {
       return res.status(401).json({ error: "You don't have permission to delete this blog" })
     } else {
       await blog.delete()

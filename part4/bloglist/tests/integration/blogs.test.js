@@ -144,6 +144,9 @@ describe("create a new blog", () => {
   })
 
   test("return status code 400 if title or url properties are missing on request ", async () => {
+    const rootUser = await usersHelper.getRootUser()
+    const validToken = loginHelper.generateValidToken(rootUser)
+
     const newBlog = {
       author: "Blog author 3",
       likes: 0
@@ -151,6 +154,7 @@ describe("create a new blog", () => {
 
     await api
       .post("/api/blogs")
+      .auth(validToken, { type: "bearer" })
       .send(newBlog)
       .expect(400)
       .expect("Content-Type", /application\/json/)
