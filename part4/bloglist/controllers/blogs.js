@@ -15,21 +15,20 @@ blogRoute.get("/", async (req, res, next) => {
   }
 })
 
-const getTokenFrom = (req) => {
-  const auth = req.get("authorization")
-  if (auth && auth.toLowerCase().startsWith("bearer ")) {
-    return auth.substring(7)
-  }
-  return null
-}
+// const getTokenFrom = (req) => {
+//   const auth = req.get("authorization")
+//   if (auth && auth.toLowerCase().startsWith("bearer ")) {
+//     return auth.substring(7)
+//   }
+//   return null
+// }
 
 blogRoute.post("/", async (req, res, next) => {
   try {
     const body = req.body
-    const token = getTokenFrom(req)
-    const decodedToken = jwt.verify(token, config.SECRET)
+    const decodedToken = jwt.verify(body.token, config.SECRET)
 
-    if (!token || !decodedToken.id) { return res.status(401).json({ error: "Authentication not found or invalid" }) }
+    if (!body.token || !decodedToken.id) { return res.status(401).json({ error: "Authentication not found or invalid" }) }
 
     if (!body.title || !body.url) {
       res.status(400).json({ error: "Title or url not defined" })

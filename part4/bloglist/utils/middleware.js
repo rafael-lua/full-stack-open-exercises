@@ -26,8 +26,20 @@ const errorHandler = (error, req, res, next) => {
   next(error)
 }
 
+const jwtTokenExtractor = (req, res, next) => {
+  let token = null
+  const auth = req.get("authorization")
+  if (auth && auth.toLowerCase().startsWith("bearer ")) {
+    token = auth.substring(7)
+  }
+  req.body.token = token
+
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  jwtTokenExtractor
 }
