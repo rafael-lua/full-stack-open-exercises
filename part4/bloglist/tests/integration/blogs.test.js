@@ -193,16 +193,37 @@ describe("update a blog", () => {
 })
 
 describe("delete a blog", () => {
-  test("blog is removed from blog list after delete", async () => {
+  test("blog is successfully removed from blog list", async () => {
+    const rootUser = await usersHelper.getRootUser()
+    const validToken = loginHelper.generateValidToken(rootUser)
+
     const blogsListBefore = await blogsHelper.blogsInDabatase()
     const blogToDelete = blogsListBefore[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .auth(validToken, { type: "bearer" })
       .expect(204)
 
     const blogsListAfter = await blogsHelper.blogsInDabatase()
     expect(blogsListAfter.length).toBe(blogsListBefore.length - 1)
+  })
+
+  test("blog is not removed from blog list if request was not from the creator", async () => {
+    const nonRootUser = await usersHelper.getNonRootUser()
+    const validToken = loginHelper.generateValidToken(nonRootUser)
+
+    const blogsListBefore = await blogsHelper.blogsInDabatase()
+    const blogToDelete = blogsListBefore[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .auth(validToken, { type: "bearer" })
+      .expect(401)
+      .expect("Content-Type", /application\/json/)
+
+    const blogsListAfter = await blogsHelper.blogsInDabatase()
+    expect(blogsListAfter.length).toBe(blogsListBefore.length)
   })
 })
 
