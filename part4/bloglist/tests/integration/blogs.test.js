@@ -11,9 +11,9 @@ const Blog = require("../../models/blog")
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  const validId = await usersHelper.validUserId()
+  const validUser = await usersHelper.getRootUser()
   const initialBlogsWithUser = blogsHelper.initialBlogs
-    .map((blog) => ({ ...blog, user: validId }))
+    .map((blog) => ({ ...blog, user: validUser.id }))
 
   const blogsToAdd = initialBlogsWithUser
     .map((blog) => new Blog(blog))

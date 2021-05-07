@@ -1,4 +1,5 @@
 const User = require("../../../models/user")
+const bcrypt = require("bcrypt")
 
 const initialUsers = [
   {
@@ -17,10 +18,9 @@ const usersInDatabase = async () => {
   const users = await User.find({})
   return users.map((user) => user.toJSON())
 }
-
-const validUserId = async () => {
+const getRootUser = async () => {
   const rootUser = await User.findOne({ username: "root" })
-  return rootUser._id
+  return rootUser.toJSON()
 }
 
 const clearUsersInDatabase = async () => {
@@ -28,13 +28,21 @@ const clearUsersInDatabase = async () => {
 }
 
 const initializeUsersInDatabase = async () => {
-  await User.insertMany(initialUsers)
+  const hashedUsers = await Promise.all(initialUsers.map(async (user) => {
+    let hashedUser = { ...user }
+    const saltRounds = 10
+    const hashedPassword = await bcrypt.hash(hashedUser.password, saltRounds)
+    delete hashedUser.password
+    hashedUser.passwordHash = hashedPassword
+    return hashedUser
+  }))
+  await User.insertMany(hashedUsers)
 }
 
 module.exports = {
   initialUsers,
   usersInDatabase,
-  validUserId,
   clearUsersInDatabase,
-  initializeUsersInDatabase
+  initializeUsersInDatabase,
+  getRootUser
 }
