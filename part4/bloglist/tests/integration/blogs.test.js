@@ -159,6 +159,21 @@ describe("create a new blog", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
   })
+
+  test("return status code 401 if authorization token is missing", async () => {
+    const newBlog = {
+      title: "Blog title 3",
+      author: "Blog author 3",
+      url: "myblog3.url",
+      likes: 0
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(401)
+      .expect("Content-Type", /application\/json/)
+  })
 })
 
 describe("update a blog", () => {
