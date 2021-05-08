@@ -1,0 +1,22 @@
+GET http://localhost:3001/api/users
+
+###
+
+POST http://localhost:3001/api/users
+content-type: application/json
+
+{
+    "username": "ilikelua",
+    "password": "ilikelua",
+    "name": "Rafael"
+}
+
+###
+// Invalid user request
+POST http://localhost:3001/api/users
+content-type: application/json
+
+{
+    "username": "invaliduser",
+    "name": "Data Missing"
+}
