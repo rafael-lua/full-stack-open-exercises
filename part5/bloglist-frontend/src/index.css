@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.alert-danger {
+  padding: 0.5em;
+  border: 2px solid red;
+  border-radius: 0.5em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.alert-success {
+  padding: 0.5em;
+  border: 2px solid green;
+  border-radius: 0.5em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.75);
+}

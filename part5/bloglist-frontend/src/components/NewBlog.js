@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import blogService from "../services/blogs"
 
-const NewBlog = ({ blogs, setBlogs }) => {
+const NewBlog = ({ blogs, setBlogs, logger }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -35,8 +35,11 @@ const NewBlog = ({ blogs, setBlogs }) => {
       }
       const createdBlog = await blogService.create(newBlog)
       setBlogs([...blogs, createdBlog])
+      logger({ msg: `Blog ${createdBlog.title} created with success!`, type: "success" })
+      setTimeout(() => {logger(null)}, 5000)
     } catch (exception) {
-      console.log(exception.message)
+      logger({ msg: "Cannot create new blog. Make sure to fill at least Title and URL fields", type: "error" })
+      setTimeout(() => {logger(null)}, 5000)
     }
   }
 

@@ -5,12 +5,14 @@ import loginService from "./services/login"
 
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
+import Notification from "./components/Notification"
 
 function App() {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     const getBlogs = async () => {
@@ -44,7 +46,8 @@ function App() {
       setUsername("")
       setPassword("")
     } catch (exception) {
-      console.log(exception.message)
+      setNotification({ msg: "Login failed. Are you sure username/password is correct?", type: "error" })
+      setTimeout(() => {setNotification(null)}, 5000)
     }
   }
 
@@ -75,9 +78,8 @@ function App() {
             <input type="button" onClick={handleLogout} value="Logout" />
           </h4>
         </div>
-        <br />
         <div>
-          <NewBlog blogs={blogs} setBlogs={setBlogs} />
+          <NewBlog blogs={blogs} setBlogs={setBlogs} logger={setNotification} />
           {blogs.map((blog) => {
             return <Blog key={blog.id} blog={blog} />
           })}
@@ -88,6 +90,11 @@ function App() {
 
   return (
     <div>
+      {
+        !notification
+          ? null
+          : <Notification message={notification.msg} type={notification.type} />
+      }
       {
         user === null
           ? loginSection()
