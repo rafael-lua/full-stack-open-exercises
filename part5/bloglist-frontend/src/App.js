@@ -4,6 +4,7 @@ import blogService from "./services/blogs"
 import loginService from "./services/login"
 
 import Login from "./components/Login"
+import NewBlog from "./components/NewBlog"
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -24,6 +25,7 @@ function App() {
     if (authUser) {
       const parsedAuthUser = JSON.parse(authUser)
       setUser(parsedAuthUser)
+      blogService.setToken(parsedAuthUser.token)
     }
   }, [])
 
@@ -35,6 +37,7 @@ function App() {
         password
       })
       setUser(authUser)
+      blogService.setToken(authUser.token)
 
       window.localStorage.setItem("blogUserAuth", JSON.stringify(authUser))
 
@@ -67,11 +70,14 @@ function App() {
       <div>
         <h2>Blogs</h2>
         <div>
-          <h4>Logged as {user.name}</h4>
-          <input type="button" onClick={handleLogout} value="Logout"/>
+          <h4>
+            Logged as {user.name}
+            <input type="button" onClick={handleLogout} value="Logout" />
+          </h4>
         </div>
         <br />
         <div>
+          <NewBlog blogs={blogs} setBlogs={setBlogs} />
           {blogs.map((blog) => {
             return <Blog key={blog.id} blog={blog} />
           })}
