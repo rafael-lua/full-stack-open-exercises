@@ -43,10 +43,10 @@ const Blog = ({ blog, updateBlog, user, logger, excludeBlog }) => {
 
   return (
     <div className="blog-block">
-      <p><strong>{blog.title}</strong> <button onClick={() => {setVisible(!visible)}}>{ visible ? "Hide" : "Show"}</button></p>
-      <p style={onShowState}>{blog.url}</p>
-      <p style={onShowState}>{blog.likes} <button onClick={handleLike}>Like</button></p>
-      <p style={onShowState}>{blog.author}</p>
+      <p className="blog-title"><strong>{blog.title}</strong> <button onClick={() => {setVisible(!visible)}}>{ visible ? "Hide" : "Show"}</button></p>
+      <p className="blog-url" style={onShowState}>{blog.url}</p>
+      <p className="blog-likes" style={onShowState}>{blog.likes} <button onClick={handleLike}>Like</button></p>
+      <p className="blog-author">{blog.author}</p>
       <button style={onShowStateDelete} className="button-danger" onClick={handleDelete}>Delete</button>
     </div>
   )
