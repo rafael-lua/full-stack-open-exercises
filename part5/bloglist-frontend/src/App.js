@@ -77,6 +77,10 @@ function App() {
     )
   }
 
+  const includeBlog = (createdBlog) => {
+    setBlogs([...blogs, createdBlog])
+  }
+
   const blogSection = () => {
     return (
       <div>
@@ -90,8 +94,7 @@ function App() {
         <div>
           <Togglable buttonLabel="New Blog" ref={togglables.newBlog}>
             <NewBlog
-              blogs={blogs}
-              setBlogs={setBlogs}
+              includeBlog={includeBlog}
               logger={setNotification}
               toggleIt={toggleIt}
             />
