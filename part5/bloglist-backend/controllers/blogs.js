@@ -39,7 +39,9 @@ blogRoute.post("/", async (req, res, next) => {
       user.blogs = user.blogs.concat(result._id)
       await user.save()
 
-      res.status(201).json(result)
+      const populatedResult = await Blog.findOne(result._id).populate("user", { username: 1, name: 1 })
+
+      res.status(201).json(populatedResult)
     }
   } catch (error) {
     next(error)

@@ -1,15 +1,43 @@
 import React, { useState } from "react"
 import blogService from "../services/blogs"
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, user, logger, excludeBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const onShowState = { display: visible ? "" : "none" }
+
+  const isCreator = () => {
+    if (blog.user) {
+      return user.username === blog.user.username
+    } else {
+      return false
+    }
+  }
+  const onShowStateDelete = { display: (visible && isCreator()) ? "" : "none" }
 
   const handleLike = async () => {
     const newLikes = blog.likes + 1
     const updatedBlog = await blogService.update(blog, newLikes)
     updateBlog(updatedBlog)
+  }
+
+  const handleDelete = async () => {
+    if (!blog.user) {
+      logger({ msg: "This blog cannot be deleted!", type: "error" })
+      setTimeout(() => { logger(null) }, 5000)
+      return
+    }
+
+    if (user.username === blog.user.username) {
+      const result = window.confirm(`Delete blog: ${blog.title} by ${blog.author ? blog.author : "unkown"}`)
+      if(result === true){
+        await blogService.remove(blog.id)
+        excludeBlog(blog)
+      }
+    } else {
+      logger({ msg: "You are not the creator of this blog.", type: "error" })
+      setTimeout(() => { logger(null) }, 5000)
+    }
   }
 
   return (
@@ -18,6 +46,7 @@ const Blog = ({ blog, updateBlog }) => {
       <p style={onShowState}>{blog.url}</p>
       <p style={onShowState}>{blog.likes} <button onClick={handleLike}>Like</button></p>
       <p style={onShowState}>{blog.author}</p>
+      <button style={onShowStateDelete} className="button-danger" onClick={handleDelete}>Delete</button>
     </div>
   )
 }
