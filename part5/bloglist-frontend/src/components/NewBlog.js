@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import blogService from "../services/blogs"
 
-const NewBlog = ({ blogs, setBlogs, logger }) => {
+const NewBlog = ({ blogs, setBlogs, logger, toggleIt }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -35,6 +35,7 @@ const NewBlog = ({ blogs, setBlogs, logger }) => {
       }
       const createdBlog = await blogService.create(newBlog)
       setBlogs([...blogs, createdBlog])
+      toggleIt("newBlog")
       logger({ msg: `Blog ${createdBlog.title} created with success!`, type: "success" })
       setTimeout(() => {logger(null)}, 5000)
     } catch (exception) {
