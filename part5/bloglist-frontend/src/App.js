@@ -88,6 +88,18 @@ function App() {
     setBlogs([...updatedBlogs])
   }
 
+  const blogsFiltered = () => {
+    const blogsToFilter = [...blogs]
+    blogsToFilter.sort((a, b) => {
+      return a.likes > b.likes
+        ? -1
+        : a.likes < b.likes
+          ? 1
+          : 0
+    })
+    return blogsToFilter
+  }
+
   const blogSection = () => {
     return (
       <div>
@@ -107,7 +119,7 @@ function App() {
             />
           </Togglable>
 
-          {blogs.map((blog) => {
+          {blogsFiltered().map((blog) => {
             return <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
           })}
         </div>
