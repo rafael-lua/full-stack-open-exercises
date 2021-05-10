@@ -1,7 +1,8 @@
 {
     "env": {
       "browser": true,
-      "es2021": true
+      "es2021": true,
+      "jest/globals": true
     },
     "extends": [
       "eslint:recommended",
@@ -15,7 +16,7 @@
       "sourceType": "module"
     },
     "plugins": [
-      "react"
+      "react", "jest"
     ],
     "rules": {
       "indent": [
@@ -50,6 +51,12 @@
         }
       ],
       "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }],
+      "no-console": "off",
       "react/prop-types": "off"
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
     }
   }
