@@ -81,6 +81,13 @@ function App() {
     setBlogs([...blogs, createdBlog])
   }
 
+  const updateBlog = (updatedBlog) => {
+    const updatedBlogs = blogs.map((b) => {
+      return b.id === updatedBlog.id ? updatedBlog : b
+    })
+    setBlogs([...updatedBlogs])
+  }
+
   const blogSection = () => {
     return (
       <div>
@@ -101,7 +108,7 @@ function App() {
           </Togglable>
 
           {blogs.map((blog) => {
-            return <Blog key={blog.id} blog={blog} />
+            return <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
           })}
         </div>
       </div>
