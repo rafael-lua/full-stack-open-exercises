@@ -2,7 +2,9 @@ import React, { useState } from "react"
 import blogService from "../services/blogs"
 import PropTypes from "prop-types"
 
-const Blog = ({ blog, updateBlog, user, logger, excludeBlog }) => {
+// !!! The handleLikeDebug is a optional function that will take place of handleLike.
+// It exists only for making a unit test exercise in the fullstackOpen course.
+const Blog = ({ blog, updateBlog, user, logger, excludeBlog, handleLikeDebug }) => {
   const [visible, setVisible] = useState(false)
 
   const onShowState = { display: visible ? "" : "none" }
@@ -45,7 +47,7 @@ const Blog = ({ blog, updateBlog, user, logger, excludeBlog }) => {
     <div className="blog-block">
       <p className="blog-title"><strong>{blog.title}</strong> <button className="blog-toggle" onClick={() => {setVisible(!visible)}}>{ visible ? "Hide" : "Show"}</button></p>
       <p className="blog-url" style={onShowState}>{blog.url}</p>
-      <p className="blog-likes" style={onShowState}>{blog.likes} <button onClick={handleLike}>Like</button></p>
+      <p className="blog-likes" style={onShowState}>{blog.likes} <button className="blog-like-button" onClick={handleLikeDebug ? handleLikeDebug : handleLike}>Like</button></p>
       <p className="blog-author">{blog.author}</p>
       <button style={onShowStateDelete} className="button-danger" onClick={handleDelete}>Delete</button>
     </div>
@@ -57,7 +59,8 @@ Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   updateBlog: PropTypes.func.isRequired,
   excludeBlog: PropTypes.func.isRequired,
-  logger: PropTypes.func.isRequired
+  logger: PropTypes.func.isRequired,
+  handleLikeDebug: PropTypes.func
 }
 
 export default Blog

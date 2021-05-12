@@ -79,4 +79,30 @@ describe("<blog /> render", () => {
     expect(likesElement).not.toHaveStyle({ display: "none" })
 
   })
+
+  it("should call the like button event handler 2x if like button is clicked 2x", () => {
+    const dummyFunction = () => {
+      return null
+    }
+
+    const mockHandler = jest.fn()
+
+    const component = render(
+      <Blog
+        blog={blog}
+        updateBlog={dummyFunction}
+        user={authUser}
+        logger={dummyFunction}
+        excludeBlog={dummyFunction}
+        handleLikeDebug={mockHandler}
+      />
+    )
+
+    const likeButton = component.container.querySelector(".blog-like-button")
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
+
+  })
 })

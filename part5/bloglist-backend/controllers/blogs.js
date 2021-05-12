@@ -63,8 +63,9 @@ blogRoute.put("/:id", async (req, res, next) => {
       new: true
     }
 
-    const updatedPerson = await Blog.findByIdAndUpdate(req.params.id, blog, opt)
-    res.status(200).json(updatedPerson)
+    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, opt)
+    const populatedResult = await Blog.findOne(updatedBlog._id).populate("user", { username: 1, name: 1 })
+    res.status(200).json(populatedResult)
   } catch (error) {
     next(error)
   }
