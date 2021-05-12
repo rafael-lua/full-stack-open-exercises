@@ -1,7 +1,9 @@
 import React, { useState } from "react"
 import blogService from "../services/blogs"
 
-const NewBlog = ({ includeBlog, logger, toggleIt }) => {
+// !!! The handleCreateDebug is a optional function that will take place of handleCreateBlog.
+// It exists only for making a unit test exercise in the fullstackOpen course.
+const NewBlog = ({ includeBlog, logger, toggleIt, handleCreateDebug }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -47,18 +49,18 @@ const NewBlog = ({ includeBlog, logger, toggleIt }) => {
   return (
     <div>
       <h3>Create a new blog:</h3>
-      <form onSubmit={handleCreateBlog}>
+      <form id="create-blog-form" onSubmit={handleCreateDebug ? () => handleCreateDebug(title, author, url) : handleCreateBlog}>
         <div>
           Title:
-          <input type="text" value={title} onChange={({ target }) => {handleChanges("title", target.value)}} />
+          <input id="create-blog-title" type="text" value={title} onChange={({ target }) => {handleChanges("title", target.value)}} />
         </div>
         <div>
           Author:
-          <input type="text" value={author} onChange={({ target }) => {handleChanges("author", target.value)}} />
+          <input id="create-blog-author" type="text" value={author} onChange={({ target }) => {handleChanges("author", target.value)}} />
         </div>
         <div>
           Url:
-          <input type="text" value={url} onChange={({ target }) => {handleChanges("url", target.value)}} />
+          <input id="create-blog-url" type="text" value={url} onChange={({ target }) => {handleChanges("url", target.value)}} />
         </div>
         <button type="submit">Add</button>
       </form>

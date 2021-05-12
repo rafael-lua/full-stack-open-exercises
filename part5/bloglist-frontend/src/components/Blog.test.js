@@ -1,7 +1,9 @@
 import React from "react"
 import { render, fireEvent } from "@testing-library/react"
 import "@testing-library/jest-dom/extend-expect"
+
 import Blog from "./Blog"
+import NewBlog from "./NewBlog"
 
 describe("<blog /> render", () => {
   let blog
@@ -85,7 +87,7 @@ describe("<blog /> render", () => {
       return null
     }
 
-    const mockHandler = jest.fn()
+    const likeHandler = jest.fn()
 
     const component = render(
       <Blog
@@ -94,7 +96,7 @@ describe("<blog /> render", () => {
         user={authUser}
         logger={dummyFunction}
         excludeBlog={dummyFunction}
-        handleLikeDebug={mockHandler}
+        handleLikeDebug={likeHandler}
       />
     )
 
@@ -102,7 +104,44 @@ describe("<blog /> render", () => {
     fireEvent.click(likeButton)
     fireEvent.click(likeButton)
 
-    expect(mockHandler.mock.calls).toHaveLength(2)
+    expect(likeHandler.mock.calls).toHaveLength(2)
+
+  })
+})
+
+describe("NewBlog component", () => {
+  it("should pass the correct data for the create blog handler on submit", () => {
+    const createHandler = jest.fn()
+
+    const component = render(
+      <NewBlog
+        handleCreateDebug={createHandler}
+      />
+    )
+
+    const createForm = component.container.querySelector("#create-blog-form")
+    const titleField = component.container.querySelector("#create-blog-title")
+    const authorField = component.container.querySelector("#create-blog-author")
+    const urlField = component.container.querySelector("#create-blog-url")
+
+    fireEvent.change(titleField, {
+      target: { value: "new blog title" }
+    })
+
+    fireEvent.change(authorField, {
+      target: { value: "new blog author" }
+    })
+
+    fireEvent.change(urlField, {
+      target: { value: "new blog url" }
+    })
+
+    fireEvent.submit(createForm)
+
+    expect(createHandler.mock.calls.length).toBe(1)
+    expect(createHandler.mock.calls[0][0]).toBe("new blog title")
+    expect(createHandler.mock.calls[0][1]).toBe("new blog author")
+    expect(createHandler.mock.calls[0][2]).toBe("new blog url")
 
   })
 })
