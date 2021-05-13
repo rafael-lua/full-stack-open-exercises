@@ -62,7 +62,7 @@ const NewBlog = ({ includeBlog, logger, toggleIt, handleCreateDebug }) => {
           Url:
           <input id="create-blog-url" type="text" value={url} onChange={({ target }) => {handleChanges("url", target.value)}} />
         </div>
-        <button type="submit">Add</button>
+        <button id="create-blog-submit" type="submit">Add</button>
       </form>
     </div>
   )

@@ -14,7 +14,7 @@ describe("Blog App", () => {
 
   it("should show login form", () => {
     cy.contains("Login into the system")
-    cy.get("#loginForm")
+    cy.get("#loginForm").should("be.visible")
   })
 
   describe("Login", () => {
@@ -36,6 +36,32 @@ describe("Blog App", () => {
       cy.get(".alert-danger")
         .contains("Login failed. Are you sure username/password is correct?")
         .and("have.css", "border", "2px solid rgb(255, 0, 0)")
+    })
+  })
+
+  describe("When logged", () => {
+    beforeEach(() => {
+      const credentials = { username: "root", password: "root" }
+      cy
+        .request("POST", "http://localhost:3000/api/login", credentials)
+        .then((res) => {
+          localStorage.setItem("blogUserAuth", JSON.stringify(res.body))
+          cy.visit("http://localhost:3000")
+        })
+    })
+
+    it("should create a blog successfully", () => {
+      cy.contains("New Blog").click()
+      cy.get("#create-blog-form").should("be.visible")
+
+      cy.get("#create-blog-title").type("blog title")
+      cy.get("#create-blog-author").type("blog author")
+      cy.get("#create-blog-url").type("blog url")
+
+      cy.get("#create-blog-submit").click()
+
+      cy.contains("blog title").should("be.visible")
+      cy.contains("blog author").should("be.visible")
     })
   })
 })
