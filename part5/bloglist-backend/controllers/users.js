@@ -28,7 +28,7 @@ userRouter.post("/", async (req, res, next) => {
     }
 
     if (!body.name) {
-      body.name = "Choose a username"
+      body.name = "Choose a name"
     }
 
     const saltRounds = 10

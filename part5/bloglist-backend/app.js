@@ -32,6 +32,11 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.jwtTokenExtractor)
 
+if (process.env.NODE_ENV === "test") {
+  const testerRouter = require("./controllers/tester")
+  app.use("/api/test", testerRouter)
+}
+
 app.use("/api/blogs", middleware.userExtractor, blogsRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)

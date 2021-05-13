@@ -28,7 +28,7 @@ const Login = ({ setUser, logger }) => {
   return (
     <div>
       <h1>Login into the system</h1>
-      <form onSubmit={handleLogin}>
+      <form id="loginForm" onSubmit={handleLogin}>
         <div>
           Username
           <input
