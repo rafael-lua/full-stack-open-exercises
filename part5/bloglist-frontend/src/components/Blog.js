@@ -49,7 +49,7 @@ const Blog = ({ blog, updateBlog, user, logger, excludeBlog, handleLikeDebug }) 
       <p className="blog-url" style={onShowState}>{blog.url}</p>
       <p className="blog-likes" style={onShowState}>{blog.likes} <button className="blog-like-button" onClick={handleLikeDebug ? handleLikeDebug : handleLike}>Like</button></p>
       <p className="blog-author">{blog.author}</p>
-      <button style={onShowStateDelete} className="button-danger" onClick={handleDelete}>Delete</button>
+      <button style={onShowStateDelete} className="blog-delete button-danger" onClick={handleDelete}>Delete</button>
     </div>
   )
 }

@@ -71,13 +71,23 @@ describe("Blog App", () => {
         cy.createBlog("blog title 3", "blog author 3", "blogurl3")
       })
 
-      it.only("should increase the likes when user clicks the like button", () => {
+      it("should increase the likes when user clicks the like button", () => {
         cy.contains("blog title 2").parent().find(".blog-toggle").click()
         cy.contains("blog title 2").parents(".blog-block").as("blogBlock")
         cy.get("@blogBlock").find(".blog-like-button").as("blogLikeButton").should("be.visible")
         cy.get("@blogLikeButton").click()
 
         cy.get("@blogBlock").find(".blog-likes").contains("1")
+      })
+
+      it("should delete the blog if the user is the creator", () => {
+        cy.contains("blog title 2").parent().find(".blog-toggle").click()
+        cy.contains("blog title 2").parents(".blog-block").as("blogBlock")
+        cy.get("@blogBlock").find(".blog-delete").as("deletebutton")
+
+        cy.get("@deletebutton").click()
+
+        cy.contains("blog title 2").should("not.exist")
       })
     })
   })
