@@ -63,5 +63,22 @@ describe("Blog App", () => {
       cy.contains("blog title").should("be.visible")
       cy.contains("blog author").should("be.visible")
     })
+
+    describe("When there is blogs on the database", () => {
+      beforeEach(() => {
+        cy.createBlog("blog title 1", "blog author 1", "blogurl")
+        cy.createBlog("blog title 2", "blog author 2", "blogurl2")
+        cy.createBlog("blog title 3", "blog author 3", "blogurl3")
+      })
+
+      it.only("should increase the likes when user clicks the like button", () => {
+        cy.contains("blog title 2").parent().find(".blog-toggle").click()
+        cy.contains("blog title 2").parents(".blog-block").as("blogBlock")
+        cy.get("@blogBlock").find(".blog-like-button").as("blogLikeButton").should("be.visible")
+        cy.get("@blogLikeButton").click()
+
+        cy.get("@blogBlock").find(".blog-likes").contains("1")
+      })
+    })
   })
 })
