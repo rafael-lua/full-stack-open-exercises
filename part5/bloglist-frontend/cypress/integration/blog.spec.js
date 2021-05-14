@@ -89,6 +89,34 @@ describe("Blog App", () => {
 
         cy.contains("blog title 2").should("not.exist")
       })
+
+      it("should have the correct order based on amount of likes", () => {
+        /*
+          Create a n variable for holding the amount of likes for a blog.
+          Get will keep trying until times out, so use it to check if the like contains the correct
+          amount of likes after each click before moving on.
+          Increasing n after each forLoop will result in diffrent valuts for each blogBlock.
+        */
+        let n = 1
+        cy.get("#main-blog-list").find(".blog-block").as("blogBlockBefore")
+        cy.get("@blogBlockBefore").each(($el, index, $list) => {
+          cy.wrap($el).find(".blog-title > .blog-toggle").click()
+          for (let i = 1; i <= n; i++){
+            cy.wrap($el).find(".blog-likes > .blog-like-button").click()
+            cy.wrap($el).find(".blog-likes").contains(i)
+          }
+          n++
+        })
+
+        // Check order by recalling the get on blogBlock and checking its new order manually
+        cy.get("#main-blog-list").find(".blog-block").as("blogBlockAfter")
+        cy.get("@blogBlockAfter").then((blogs) => {
+          cy.wrap(blogs[0]).contains("blog title 3")
+          cy.wrap(blogs[1]).contains("blog title 2")
+          cy.wrap(blogs[2]).contains("blog title 1")
+        })
+
+      })
     })
   })
 })

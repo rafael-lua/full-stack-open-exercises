@@ -90,7 +90,7 @@ function App() {
             <input type="button" onClick={handleLogout} value="Logout" />
           </h4>
         </div>
-        <div>
+        <div id="main-blog-list">
           <Togglable buttonLabel="New Blog" ref={togglables.newBlog}>
             <NewBlog
               includeBlog={includeBlog}
