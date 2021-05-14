@@ -95,7 +95,7 @@ describe("Blog App", () => {
           Create a n variable for holding the amount of likes for a blog.
           Get will keep trying until times out, so use it to check if the like contains the correct
           amount of likes after each click before moving on.
-          Increasing n after each forLoop will result in diffrent valuts for each blogBlock.
+          Increasing n after each forLoop will result in different values for each blogBlock.
         */
         let n = 1
         cy.get("#main-blog-list").find(".blog-block").as("blogBlockBefore")
