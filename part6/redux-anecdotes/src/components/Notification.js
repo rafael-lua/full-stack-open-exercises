@@ -9,10 +9,17 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
+
+  if (notification.visible === true) {
+    return (
+      <div style={style}>
+        {notification.message}
+      </div>
+    )
+  }
+
   return (
-    <div style={style}>
-      {notification}
-    </div>
+    <></>
   )
 }
 

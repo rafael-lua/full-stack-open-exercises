@@ -1,6 +1,7 @@
 import React from "react"
 import { useDispatch } from "react-redux"
 import { createAnecdote, sortAnecdotes } from "../reducers/anecdoteReducer"
+import { setNotification, removeNotification } from "../reducers/notificationReducer"
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -10,6 +11,9 @@ const AnecdoteForm = () => {
 
     dispatch(createAnecdote(e.target.anecdote.value))
     dispatch(sortAnecdotes())
+    const notifMsg = `Created the anecdote: ${e.target.anecdote.value}`
+    dispatch(setNotification(notifMsg))
+    setTimeout(() => dispatch(removeNotification(notifMsg)), 5000)
   }
 
   return (
