@@ -13,6 +13,9 @@ const reducer = (state = initialValue, action) => {
     }
 
     case "REMOVE_NOTIFICATION": {
+      // Since there is multiple timers by multiple notifications to remove them, this will check
+      // if the timer corresponds to the current notification and only remove if its true.
+      // This means only the last timer set will remove the notification, making stay for full duration.
       const isTheCurrentMessage = !(action.message === state.message)
       return { ...state, visible: isTheCurrentMessage }
     }
