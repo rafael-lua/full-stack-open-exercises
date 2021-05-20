@@ -41,12 +41,7 @@ const reducer = (state = [], action) => {
     }
 
     case "CREATE": {
-      const newAnecdote = {
-        content: action.data,
-        // id: getId(),
-        votes: 0
-      }
-      return [...state, newAnecdote]
+      return [...state, action.data]
     }
 
     case "SORT": {
