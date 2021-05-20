@@ -23,18 +23,36 @@ const reducer = (state = initialValue, action) => {
   }
 }
 
-export const setNotification = (msg) => {
-  return {
-    type: "SET_NOTIFICATION",
-    message: msg
+const timer = (t) => {
+  return new Promise(resolve => setTimeout(resolve, t * 1000))
+}
+
+// export const setNotification = (msg) => {
+//   return {
+//     type: "SET_NOTIFICATION",
+//     message: msg
+//   }
+// }
+
+export const setNotification = (msg, wait) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_NOTIFICATION",
+      message: msg
+    })
+    await timer(wait)
+    dispatch({
+      type: "REMOVE_NOTIFICATION",
+      message: msg
+    })
   }
 }
 
-export const removeNotification = (msg) => {
-  return {
-    type: "REMOVE_NOTIFICATION",
-    message: msg
-  }
-}
+// export const removeNotification = (msg) => {
+//   return {
+//     type: "REMOVE_NOTIFICATION",
+//     message: msg
+//   }
+// }
 
 export default reducer
