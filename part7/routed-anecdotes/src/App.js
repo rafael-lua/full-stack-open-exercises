@@ -74,14 +74,20 @@ const CreateNew = (props) => {
   const author = useField("text")
   const info = useField("text")
 
+  const clearFields = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const newAnec = {
-      content: content.value,
-      author: author.value,
-      info: info.value,
+      content: content.attributes.value,
+      author: author.attributes.value,
+      info: info.attributes.value,
       votes: 0
     }
     props.addNew(newAnec)
@@ -97,20 +103,21 @@ const CreateNew = (props) => {
         <div>
           content
           {/* <input name='content' value={content} onChange={(e) => setContent(e.target.value)} /> */}
-          <input name='content' {...content} />
+          <input name='content' {...content.attributes} />
         </div>
         <div>
           author
           {/* <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} /> */}
-          <input name='author' {...author} />
+          <input name='author' {...author.attributes} />
         </div>
         <div>
           url for more info
           {/* <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} /> */}
-          <input name='info' {...info} />
+          <input name='info' {...info.attributes} />
         </div>
         <button>create</button>
       </form>
+      <button onClick={clearFields}>clear</button>
     </div>
   )
 
