@@ -1,13 +1,9 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 
-import { setNotification } from "../reducers/notificationReducer"
+import { createBlog } from "../reducers/blogReducer"
 
-import blogService from "../services/blogs"
-
-// !!! The handleCreateDebug is a optional function that will take place of handleCreateBlog.
-// It exists only for making a unit test exercise in the fullstackOpen course.
-const NewBlog = ({ includeBlog, toggleIt, handleCreateDebug }) => {
+const NewBlog = ({ toggleIt }) => {
   const dispatch = useDispatch()
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
@@ -34,25 +30,19 @@ const NewBlog = ({ includeBlog, toggleIt, handleCreateDebug }) => {
 
   const handleCreateBlog = async (e) => {
     e.preventDefault()
-    try {
-      const newBlog = {
-        title,
-        author,
-        url
-      }
-      const createdBlog = await blogService.create(newBlog)
-      includeBlog(createdBlog)
-      toggleIt("newBlog")
-      dispatch(setNotification(`Blog ${createdBlog.title} created with success!`, "success"))
-    } catch (exception) {
-      dispatch(setNotification("Cannot create new blog. Make sure to fill at least Title and URL fields", "error"))
+    const newBlog = {
+      title,
+      author,
+      url
     }
+    dispatch(createBlog(newBlog))
+    toggleIt("newBlog")
   }
 
   return (
     <div>
       <h3>Create a new blog:</h3>
-      <form id="create-blog-form" onSubmit={handleCreateDebug ? () => handleCreateDebug(title, author, url) : handleCreateBlog}>
+      <form id="create-blog-form" onSubmit={handleCreateBlog}>
         <div>
           Title:
           <input id="create-blog-title" type="text" value={title} onChange={({ target }) => {handleChanges("title", target.value)}} />

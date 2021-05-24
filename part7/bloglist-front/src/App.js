@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
 import { removeNotification } from "./reducers/notificationReducer"
+import { initializeBlogs } from "./reducers/blogReducer"
 
 import Blog from "./components/Blog"
 import blogService from "./services/blogs"
@@ -14,16 +15,17 @@ import Togglable from "./components/Togglable"
 function App() {
   const dispatch = useDispatch()
 
+  // Decreases notifications timer
   useEffect(() => {
     setInterval(() => {
       dispatch(removeNotification())
     }, 100)
   }, [removeNotification, dispatch])
 
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-  // const [notification, setNotification] = useState(null)
   const notification = useSelector((state) => state.notification)
+  const blogs = useSelector((state) => state.blogs)
+  // const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState(null)
 
   const togglables = {
     newBlog: useRef()
@@ -34,12 +36,8 @@ function App() {
   }
 
   useEffect(() => {
-    const getBlogs = async () => {
-      const blogsList = await blogService.getAll()
-      setBlogs( blogsList )
-    }
-    getBlogs()
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const authUser = window.localStorage.getItem("blogUserAuth")
@@ -63,21 +61,17 @@ function App() {
     )
   }
 
-  const includeBlog = (createdBlog) => {
-    setBlogs([...blogs, createdBlog])
-  }
-
   const excludeBlog = (removedBlog) => {
-    setBlogs(blogs.filter((b) => {
-      return b.id !== removedBlog.id
-    }))
+    // setBlogs(blogs.filter((b) => {
+    //   return b.id !== removedBlog.id
+    // }))
   }
 
   const updateBlog = (updatedBlog) => {
-    const updatedBlogs = blogs.map((b) => {
-      return b.id === updatedBlog.id ? updatedBlog : b
-    })
-    setBlogs([...updatedBlogs])
+    // const updatedBlogs = blogs.map((b) => {
+    //   return b.id === updatedBlog.id ? updatedBlog : b
+    // })
+    // setBlogs([...updatedBlogs])
   }
 
   const blogsFiltered = () => {
@@ -105,7 +99,6 @@ function App() {
         <div id="main-blog-list">
           <Togglable buttonLabel="New Blog" ref={togglables.newBlog}>
             <NewBlog
-              includeBlog={includeBlog}
               toggleIt={toggleIt}
             />
           </Togglable>

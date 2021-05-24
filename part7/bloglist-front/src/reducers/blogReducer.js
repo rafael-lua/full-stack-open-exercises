@@ -1,0 +1,46 @@
+import blogService from "../services/blogs"
+
+import { setNotification } from "./notificationReducer"
+
+const reducer = (state = [], action) => {
+  switch (action.type) {
+    case "INITIALIZE_BLOGS": {
+      return action.data
+    }
+
+    case "CREATE_BLOG": {
+      const newState = [...state, action.data]
+      return newState
+    }
+
+    default:
+      return state
+  }
+}
+
+export const initializeBlogs = () => {
+  return async (dispatch) => {
+    const blogs = await blogService.getAll()
+    dispatch({
+      type: "INITIALIZE_BLOGS",
+      data: blogs
+    })
+  }
+}
+
+export const createBlog = (blog) => {
+  return async (dispatch) => {
+    try {
+      const createdBlog = await blogService.create(blog)
+      dispatch({
+        type: "CREATE_BLOG",
+        data: createdBlog
+      })
+      dispatch(setNotification(`Blog ${createdBlog.title} created with success!`, "success"))
+    } catch (exception) {
+      dispatch(setNotification("Cannot create new blog. Make sure to fill at least Title and URL fields", "error"))
+    }
+  }
+}
+
+export default reducer
