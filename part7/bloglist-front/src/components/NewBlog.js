@@ -5,6 +5,7 @@ import { createBlog } from "../reducers/blogReducer"
 
 const NewBlog = ({ toggleIt }) => {
   const dispatch = useDispatch()
+
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")

@@ -61,19 +61,6 @@ function App() {
     )
   }
 
-  const excludeBlog = (removedBlog) => {
-    // setBlogs(blogs.filter((b) => {
-    //   return b.id !== removedBlog.id
-    // }))
-  }
-
-  const updateBlog = (updatedBlog) => {
-    // const updatedBlogs = blogs.map((b) => {
-    //   return b.id === updatedBlog.id ? updatedBlog : b
-    // })
-    // setBlogs([...updatedBlogs])
-  }
-
   const blogsFiltered = () => {
     const blogsToFilter = [...blogs]
     blogsToFilter.sort((a, b) => {
@@ -108,9 +95,7 @@ function App() {
               <Blog
                 key={blog.id}
                 blog={blog}
-                updateBlog={updateBlog}
                 user={user}
-                excludeBlog={excludeBlog}
               />
             )
           })}

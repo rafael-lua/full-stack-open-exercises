@@ -2,13 +2,13 @@ import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 
 import { setNotification } from "../reducers/notificationReducer"
+import { likeBlog,deleteBlog } from "../reducers/blogReducer"
 
-import blogService from "../services/blogs"
 import PropTypes from "prop-types"
 
 // !!! The handleLikeDebug is a optional function that will take place of handleLike.
 // It exists only for making a unit test exercise in the fullstackOpen course.
-const Blog = ({ blog, updateBlog, user, excludeBlog, handleLikeDebug }) => {
+const Blog = ({ blog, user, handleLikeDebug }) => {
   const dispatch = useDispatch()
   const [visible, setVisible] = useState(false)
 
@@ -24,9 +24,7 @@ const Blog = ({ blog, updateBlog, user, excludeBlog, handleLikeDebug }) => {
   const onShowStateDelete = { display: (visible && isCreator()) ? "" : "none" }
 
   const handleLike = async () => {
-    const newLikes = blog.likes + 1
-    const updatedBlog = await blogService.update(blog, newLikes)
-    updateBlog(updatedBlog)
+    dispatch(likeBlog(blog))
   }
 
   const handleDelete = async () => {
@@ -37,9 +35,8 @@ const Blog = ({ blog, updateBlog, user, excludeBlog, handleLikeDebug }) => {
 
     if (user.username === blog.user.username) {
       const result = window.confirm(`Delete blog: ${blog.title} by ${blog.author ? blog.author : "unkown"}`)
-      if(result === true){
-        await blogService.remove(blog.id)
-        excludeBlog(blog)
+      if (result === true) {
+        dispatch(deleteBlog(blog))
       }
     } else {
       dispatch(setNotification("You are not the creator of this blog.", "error"))
@@ -60,8 +57,6 @@ const Blog = ({ blog, updateBlog, user, excludeBlog, handleLikeDebug }) => {
 Blog.propTypes = {
   user: PropTypes.object.isRequired,
   blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
-  excludeBlog: PropTypes.func.isRequired,
   handleLikeDebug: PropTypes.func
 }
 
