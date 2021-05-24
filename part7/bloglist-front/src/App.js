@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
 import { removeNotification } from "./reducers/notificationReducer"
 import { initializeBlogs } from "./reducers/blogReducer"
+import { getStoredUser, logout } from "./reducers/userReducer"
 
 import Blog from "./components/Blog"
-import blogService from "./services/blogs"
 
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
@@ -24,8 +24,8 @@ function App() {
 
   const notification = useSelector((state) => state.notification)
   const blogs = useSelector((state) => state.blogs)
-  // const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  const user = useSelector((state) => state.user)
+  // const [user, setUser] = useState(null)
 
   const togglables = {
     newBlog: useRef()
@@ -37,27 +37,16 @@ function App() {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(getStoredUser())
   }, [dispatch])
 
-  useEffect(() => {
-    const authUser = window.localStorage.getItem("blogUserAuth")
-    if (authUser) {
-      const parsedAuthUser = JSON.parse(authUser)
-      setUser(parsedAuthUser)
-      blogService.setToken(parsedAuthUser.token)
-    }
-  }, [])
-
   const handleLogout = () => {
-    setUser(null)
-    window.localStorage.removeItem("blogUserAuth")
+    dispatch(logout())
   }
 
   const loginSection = () => {
     return (
-      <Login
-        setUser={setUser}
-      />
+      <Login />
     )
   }
 
