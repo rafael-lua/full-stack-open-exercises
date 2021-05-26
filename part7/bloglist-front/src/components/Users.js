@@ -19,7 +19,7 @@ const Users = () => {
             users.map((user) => {
               return (
                 <tr key={user.id}>
-                  <td><Link to={`user/${user.id}`}>{ user.name }</Link></td>
+                  <td><Link to={`/user/${user.id}`}>{ user.name }</Link></td>
                   <td>{ user.blogs.length }</td>
                 </tr>
               )

@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux"
 import {
   Route,
   Switch,
-  useRouteMatch
+  useRouteMatch,
+  Link,
 } from "react-router-dom"
 
 import { removeNotification } from "./reducers/notificationReducer"
@@ -97,11 +98,14 @@ function App() {
 
           {blogsFiltered().map((blog) => {
             return (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                user={user}
-              />
+              <Link key={blog.id} to={`/blog/${blog.id}`}>
+                <p>{ blog.title }</p>
+              </Link>
+              // <Blog
+              //   key={blog.id}
+              //   blog={blog}
+              //   user={user}
+              // />
             )
           })}
         </div>
@@ -112,6 +116,11 @@ function App() {
   const matchUser = useRouteMatch("/user/:id")
   const matchedUser = (matchUser)
     ? users.find((user) => user.id === matchUser.params.id)
+    : null
+
+  const matchBlog = useRouteMatch("/blog/:id")
+  const matchedBlog = (matchBlog)
+    ? blogs.find((blog) => blog.id === matchBlog.params.id)
     : null
 
   return (
@@ -127,6 +136,9 @@ function App() {
           : blogSection()
       }
       <Switch>
+        <Route path="/blog/:id">
+          <Blog user={user} blog={matchedBlog} />
+        </Route>
         <Route path="/user/:id">
           <User user={matchedUser} />
         </Route>
