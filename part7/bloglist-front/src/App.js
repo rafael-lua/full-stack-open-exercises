@@ -1,11 +1,18 @@
 import React, { useEffect, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
+import {
+  Route,
+  Switch,
+  // Link
+} from "react-router-dom"
 
 import { removeNotification } from "./reducers/notificationReducer"
 import { initializeBlogs } from "./reducers/blogReducer"
-import { getStoredUser, logout } from "./reducers/userReducer"
+import { initializeUsers } from "./reducers/userReducer"
+import { getStoredUser, logout } from "./reducers/loginReducer"
 
 import Blog from "./components/Blog"
+import Users from "./components/Users"
 
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
@@ -36,6 +43,7 @@ function App() {
   }
 
   useEffect(() => {
+    dispatch(initializeUsers())
     dispatch(initializeBlogs())
     dispatch(getStoredUser())
   }, [dispatch])
@@ -72,6 +80,13 @@ function App() {
             <input type="button" onClick={handleLogout} value="Logout" />
           </h4>
         </div>
+      </div>
+    )
+  }
+
+  const blogList = () => {
+    return (
+      <div>
         <div id="main-blog-list">
           <Togglable buttonLabel="New Blog" ref={togglables.newBlog}>
             <NewBlog
@@ -105,6 +120,14 @@ function App() {
           ? loginSection()
           : blogSection()
       }
+      <Switch>
+        <Route path="/users">
+          <Users />
+        </Route>
+        <Route path="/">
+          {blogList()}
+        </Route>
+      </Switch>
     </div>
   )
 }
