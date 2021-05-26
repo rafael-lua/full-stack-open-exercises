@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import {
   Route,
   Switch,
-  // Link
+  useRouteMatch
 } from "react-router-dom"
 
 import { removeNotification } from "./reducers/notificationReducer"
@@ -13,6 +13,7 @@ import { getStoredUser, logout } from "./reducers/loginReducer"
 
 import Blog from "./components/Blog"
 import Users from "./components/Users"
+import User from "./components/User"
 
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
@@ -32,7 +33,7 @@ function App() {
   const notification = useSelector((state) => state.notification)
   const blogs = useSelector((state) => state.blogs)
   const user = useSelector((state) => state.user)
-  // const [user, setUser] = useState(null)
+  const users = useSelector((state) => state.users)
 
   const togglables = {
     newBlog: useRef()
@@ -108,6 +109,11 @@ function App() {
     )
   }
 
+  const matchUser = useRouteMatch("/user/:id")
+  const matchedUser = (matchUser)
+    ? users.find((user) => user.id === matchUser.params.id)
+    : null
+
   return (
     <div>
       {
@@ -121,6 +127,9 @@ function App() {
           : blogSection()
       }
       <Switch>
+        <Route path="/user/:id">
+          <User user={matchedUser} />
+        </Route>
         <Route path="/users">
           <Users />
         </Route>
