@@ -75,13 +75,15 @@ function App() {
   const blogSection = () => {
     return (
       <div>
-        <h2>Blogs</h2>
-        <div>
-          <h4>
+        <nav className="navbar">
+          <p className="nav-status">
             Logged as {user.name}
             <input type="button" onClick={handleLogout} value="Logout" />
-          </h4>
-        </div>
+          </p>
+          <Link to="/blogs" className="nav-item">blogs</Link>
+          <Link to="/users" className="nav-item">users</Link>
+        </nav>
+        <h2>Blogs App</h2>
       </div>
     )
   }
