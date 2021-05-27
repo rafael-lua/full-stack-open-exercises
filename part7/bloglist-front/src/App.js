@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import {
   Route,
   Switch,
+  useHistory,
   useRouteMatch,
   Link,
 } from "react-router-dom"
@@ -23,6 +24,7 @@ import Togglable from "./components/Togglable"
 
 function App() {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   // Decreases notifications timer
   useEffect(() => {
@@ -52,12 +54,7 @@ function App() {
 
   const handleLogout = () => {
     dispatch(logout())
-  }
-
-  const loginSection = () => {
-    return (
-      <Login />
-    )
+    history.push("/")
   }
 
   const blogsFiltered = () => {
@@ -134,7 +131,7 @@ function App() {
       }
       {
         user === null
-          ? loginSection()
+          ? <Login />
           : blogSection()
       }
       <Switch>
@@ -145,10 +142,18 @@ function App() {
           <User user={matchedUser} />
         </Route>
         <Route path="/users">
-          <Users />
+          {
+            user === null
+              ? null
+              : <Users />
+          }
         </Route>
         <Route path="/">
-          {blogList()}
+          {
+            user === null
+              ? null
+              : blogList()
+          }
         </Route>
       </Switch>
     </div>

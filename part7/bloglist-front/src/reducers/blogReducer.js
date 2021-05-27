@@ -86,4 +86,18 @@ export const deleteBlog = (blog) => {
   }
 }
 
+export const commentBlog = (blog, comment) => {
+  return async (dispatch) => {
+    try {
+      const commentedBlog = await blogService.sendComment(blog, comment)
+      dispatch({
+        type: "UPDATE_BLOG",
+        data: commentedBlog
+      })
+    } catch (exception) {
+      dispatch(setNotification("You can't comment this blog", "error"))
+    }
+  }
+}
+
 export default reducer

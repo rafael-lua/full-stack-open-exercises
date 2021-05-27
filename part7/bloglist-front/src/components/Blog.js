@@ -1,11 +1,12 @@
-import React from "react"
+import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useHistory } from "react-router-dom"
 
 import { setNotification } from "../reducers/notificationReducer"
-import { likeBlog, deleteBlog } from "../reducers/blogReducer"
+import { likeBlog, deleteBlog, commentBlog } from "../reducers/blogReducer"
 
 const Blog = ({ blog, user }) => {
+  const [comment, setcomment] = useState("")
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -43,6 +44,11 @@ const Blog = ({ blog, user }) => {
     }
   }
 
+  const handleComment = () => {
+    dispatch(commentBlog(blog, comment))
+    setcomment("")
+  }
+
   const commentId = (comment) => {
     const date = new Date()
     return comment.replace(" ", "") + date.toDateString()
@@ -56,6 +62,7 @@ const Blog = ({ blog, user }) => {
       <p className="blog-author">added by {blog.author}</p>
       <button style={onShowStateDelete} className="blog-delete button-danger" onClick={handleDelete}>Delete</button>
       <h2>comments</h2>
+      <input type="text" value={comment} onChange={ (e) => {setcomment(e.target.value)}} /><button onClick={handleComment}>Add comment</button>
       <ul>
         {
           (blog.comments && blog.comments.length > 0)
