@@ -43,13 +43,30 @@ const Blog = ({ blog, user }) => {
     }
   }
 
+  const commentId = (comment) => {
+    const date = new Date()
+    return comment.replace(" ", "") + date.toDateString()
+  }
+
   return (
     <div className="blog-block">
       <p className="blog-title"><strong>{blog.title}</strong></p>
       <p className="blog-url">{blog.url}</p>
-      <p className="blog-likes">{blog.likes} <button className="blog-like-button" onClick={handleLike}>Like</button></p>
-      <p className="blog-author">{blog.author}</p>
+      <p className="blog-likes">likes: {blog.likes} <button className="blog-like-button" onClick={handleLike}>Like</button></p>
+      <p className="blog-author">added by {blog.author}</p>
       <button style={onShowStateDelete} className="blog-delete button-danger" onClick={handleDelete}>Delete</button>
+      <h2>comments</h2>
+      <ul>
+        {
+          (blog.comments && blog.comments.length > 0)
+            ? blog.comments.map((comment) => {
+              return (
+                <li key={commentId(comment)}>{ comment }</li>
+              )
+            })
+            : <p>No comments yet...</p>
+        }
+      </ul>
     </div>
   )
 }

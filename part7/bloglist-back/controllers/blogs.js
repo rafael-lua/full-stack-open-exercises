@@ -48,6 +48,22 @@ blogRoute.post("/", async (req, res, next) => {
   }
 })
 
+blogRoute.post("/:id/comments", async (req, res, next) => {
+  try {
+    if (!req.body.comment) {
+      return res.status(400).json({ error: "Empty comment parameter" })
+    }
+
+    const blog = await Blog.findById(req.params.id)
+    blog.comments = blog.comments.concat(req.body.comment)
+    await blog.save()
+
+    res.status(200).json(blog)
+  } catch (error) {
+    next(error)
+  }
+})
+
 blogRoute.put("/:id", async (req, res, next) => {
   try {
     if (!req.body.likes) {
