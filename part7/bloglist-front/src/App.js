@@ -22,6 +22,75 @@ import NewBlog from "./components/NewBlog"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 
+import styled from "styled-components"
+
+const MainDiv = styled.div`
+  max-width: 1200px;
+  padding: 0.5em 1em;
+  margin: 0 auto;
+`
+
+const MainNav = styled.nav`
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0.5em;
+  padding: 0.5em 1em;
+  display: flex;
+  justify-content: space-between;
+
+  .nav-item {
+    margin: 0 1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(0, 0, 155, 0.5);
+    font-weight: 500;
+
+    &:hover {
+      font-weight: bold;
+    }
+  }
+  
+  .nav-status {
+    margin: 0;
+  }
+`
+
+const InputButton = styled.input`
+  margin: 0 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 0.5em;
+  outline: none;
+  padding: 0.25em 0.5em;
+  background-color: rgba(255, 0, 0, 0.1);
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(255, 0, 0, 0.25);
+  }
+`
+
+const LinkStyled = styled(Link)`
+  font-size: 1.2em;
+  font-weight: 500;
+  text-decoration: none;
+
+  & p {
+    margin: 0.25em 0;
+    padding: 0.25em 0.5em;
+    border-radius: 0.5em;
+  }
+
+  & p:hover {
+    font-weight: bold;
+    padding-left: 0.75em;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  & p:active {
+    color: rgba(0, 55, 0, 0.5);
+    font-style: italic;
+  }
+`
+
 function App() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -72,15 +141,17 @@ function App() {
   const blogSection = () => {
     return (
       <div>
-        <nav className="navbar">
+        <MainNav>
+          <div>
+            <Link to="/blogs" className="nav-item">blogs</Link>
+            <Link to="/users" className="nav-item">users</Link>
+          </div>
           <p className="nav-status">
-            Logged as {user.name}
-            <input type="button" onClick={handleLogout} value="Logout" />
+            <em>Logged as <strong>{user.name}</strong></em>
+            <InputButton type="button" onClick={handleLogout} value="Logout" />
           </p>
-          <Link to="/blogs" className="nav-item">blogs</Link>
-          <Link to="/users" className="nav-item">users</Link>
-        </nav>
-        <h2>Blogs App</h2>
+        </MainNav>
+        <h2>BLOGS APP</h2>
       </div>
     )
   }
@@ -94,17 +165,12 @@ function App() {
               toggleIt={toggleIt}
             />
           </Togglable>
-
+          <hr></hr>
           {blogsFiltered().map((blog) => {
             return (
-              <Link key={blog.id} to={`/blog/${blog.id}`}>
+              <LinkStyled key={blog.id} to={`/blog/${blog.id}`}>
                 <p>{ blog.title }</p>
-              </Link>
-              // <Blog
-              //   key={blog.id}
-              //   blog={blog}
-              //   user={user}
-              // />
+              </LinkStyled>
             )
           })}
         </div>
@@ -123,7 +189,7 @@ function App() {
     : null
 
   return (
-    <div>
+    <MainDiv>
       {
         (notification.message)
           ? <Notification message={notification.message} type={notification.style} />
@@ -156,7 +222,7 @@ function App() {
           }
         </Route>
       </Switch>
-    </div>
+    </MainDiv>
   )
 }
 

@@ -12,19 +12,6 @@ code {
     monospace;
 }
 
-.navbar {
-  background-color: lightgrey;
-}
-
-.nav-item {
-  margin: 0 1em;
-}
-
-.nav-status {
-  font-weight: bold;
-  margin: 0;
-}
-
 .alert-danger {
   padding: 0.5em;
   border: 2px solid red;
@@ -41,13 +28,3 @@ code {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
-.blog-block {
-  border: 1px solid black;
-  padding: 0 0.25em;
-  margin: 0.25em;
-}
-
-.button-danger {
-  background-color: darkred;
-  color: white;
-}
