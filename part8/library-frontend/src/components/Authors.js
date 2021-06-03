@@ -5,7 +5,7 @@ import SetBirth from "./SetBirth"
 
 import { ALL_AUTHORS } from "../queries"
 
-const Authors = ({ show }) => {
+const Authors = ({ show, token }) => {
   const authors = useQuery(ALL_AUTHORS, {
     pollInterval: 2000
   })
@@ -39,7 +39,11 @@ const Authors = ({ show }) => {
           )}
         </tbody>
       </table>
-      <SetBirth authors={authors.data.allAuthors} />
+      {
+        token
+          ? <SetBirth authors={authors.data.allAuthors} />
+          : null
+      }
     </div>
   )
 }

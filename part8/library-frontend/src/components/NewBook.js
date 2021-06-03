@@ -13,7 +13,7 @@ const NewBook = ({ show }) => {
   const [createBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }],
     onError: (error) => {
-      console.log(error)
+      console.log(JSON.stringify(error))
     }
   })
 
