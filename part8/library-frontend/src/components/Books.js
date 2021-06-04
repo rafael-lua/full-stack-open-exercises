@@ -1,12 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useQuery } from "@apollo/client"
+import { useQuery, useLazyQuery } from "@apollo/client"
 
 import { ALL_BOOKS } from "../queries"
 
 const Books = ({ show }) => {
   const [genres, setGenres] = useState([])
   const [filterGenre, setFilterGenre] = useState(null)
+  const [booksPerGenre, setBooksPerGenre] = useState(null)
+  const [getFilteredBooks, result] = useLazyQuery(ALL_BOOKS, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_BOOKS });
+      store.writeQuery({
+        query: ALL_BOOKS,
+        data: {
+          ...dataInStore,
+          allBooks: [...response.data.allBooks],
+        }
+      });
+    }
+  }) // lazeQuery to use everytime the genre filter changes
 
+  useEffect(() => {
+    getFilteredBooks({ variables: { genre: filterGenre } })
+  }, [filterGenre, getFilteredBooks])
+  
+  // Should be refactored to use some "GENRES_LIST" query instead of mannually getting all books
   const books = useQuery(ALL_BOOKS, {
     pollInterval: 2000
   })
@@ -15,6 +33,19 @@ const Books = ({ show }) => {
     setGenres(g)
   }, [])
 
+  const setBooksPerGenreCallback = useCallback((b) => {
+    setBooksPerGenre(b)
+  }, [])
+
+  useEffect(() => {
+    if (result.data) {
+      setBooksPerGenreCallback(result.data.allBooks)
+    } else if (!books.loading) {
+      setBooksPerGenreCallback(books.data.allBooks)
+    }
+  }, [books, result.data, setBooksPerGenreCallback])
+
+  // List of genres for buttons
   useEffect(() => {
     if (books.data) {
       let genresList = []
@@ -32,17 +63,16 @@ const Books = ({ show }) => {
 
   const filterBy = (g) => {
     setFilterGenre(g)
+    getFilteredBooks({variables: { genre: filterGenre }})
   }
 
   const filteredBooks = () => {
-    let boosPerGenre = [...books.data.allBooks]
-
-    if (filterGenre) {
-      boosPerGenre = boosPerGenre.filter((book) => book.genres.includes(filterGenre))
+    if (!booksPerGenre) {
+      return null
     }
 
     return (
-      boosPerGenre.map(a =>
+      booksPerGenre.map(a =>
         <tr key={a.title}>
           <td>{a.title}</td>
           <td>{a.author.name}</td>
