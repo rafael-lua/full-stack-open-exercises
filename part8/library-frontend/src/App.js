@@ -1,21 +1,39 @@
-import React, { useState, useCallback } from 'react'
-import {useApolloClient} from '@apollo/client'
+import React, { useState, useEffect, useCallback } from 'react'
+import { useQuery, useApolloClient } from '@apollo/client'
+
+import { GET_USER } from "./queries"
 
 import Login from './components/Login'
 import Authors from './components/Authors'
 import Books from './components/Books'
+import Recommended from './components/Recommended'
 import NewBook from './components/NewBook'
 
 const App = () => {
+  const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
 
   const client = useApolloClient()
 
+  const getUser = useQuery(GET_USER, {
+    pollInterval: 2000
+  })
+
   const setTokenCallback = useCallback((t) => {
     setToken(t)
     setPage('authors')
   }, [])
+
+  const setUserCallback = useCallback((u) => {
+    setUser(u)
+  }, [])
+
+  useEffect(() => {
+    if (token && getUser.data) {
+      setUserCallback(getUser.data.me)
+    }
+  },[token, getUser.data, setUserCallback])
 
   const logout = () => {
     setToken(null)
@@ -35,6 +53,11 @@ const App = () => {
         }
         {
           token
+            ? <button onClick={() => setPage('recommended')}>recommended</button>
+            : null
+        }
+        {
+          token
             ? <button onClick={() => setPage('add')}>add book</button>
             : null
         }
@@ -47,6 +70,11 @@ const App = () => {
 
       <Books
         show={page === 'books'}
+      />
+
+      <Recommended
+        show={page === 'recommended'}
+        user={user}
       />
 
       <NewBook

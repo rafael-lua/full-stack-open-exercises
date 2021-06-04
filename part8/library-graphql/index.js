@@ -63,6 +63,7 @@ const typeDefs = gql`
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
+    allRecommendedBooks: [Book!]!
     allAuthors: [Author!]!
     me: User
   }
@@ -96,6 +97,24 @@ const resolvers = {
         bookList = await Book.find({})
       }
       return Book.populate(bookList, { path: "author" })
+    },
+    allRecommendedBooks: async (root, args, context) => {
+      if (!context.authenticatedUser) {
+        throw new AuthenticationError("authentication needed")
+      }
+
+      try {
+        const user = await User.findById(context.authenticatedUser.id)
+        const books = await Book.find({})
+        const booksPopulated = await Book.populate(books, { path: "author" })
+
+        return booksPopulated.filter((book) => book.genres.includes(user.favoriteGenre))
+
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
     },
     allAuthors: () => Author.find({}),
     me: (root, args, context) => {
