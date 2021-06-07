@@ -1,49 +1,52 @@
-import React, { useState } from 'react'
-import { useMutation } from "@apollo/client"
+import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
 
-import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from "../queries"
+import { ADD_BOOK, ALL_AUTHORS } from "../queries";
 
-const NewBook = ({ show }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuhtor] = useState('')
-  const [published, setPublished] = useState('')
-  const [genre, setGenre] = useState('')
-  const [genres, setGenres] = useState([])
+const NewBook = ({ show, updateCacheWith }) => {
+  const [title, setTitle] = useState("");
+  const [author, setAuhtor] = useState("");
+  const [published, setPublished] = useState("");
+  const [genre, setGenre] = useState("");
+  const [genres, setGenres] = useState([]);
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }],
+    refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (error) => {
-      console.log(JSON.stringify(error))
-    }
-  })
+      console.log(JSON.stringify(error));
+    },
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook);
+    },
+  });
 
   if (!show) {
-    return null
+    return null;
   }
 
   const submit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     createBook({
       variables: {
         title,
         author,
         published: parseInt(published),
-        genres
-      }
-    })
+        genres,
+      },
+    });
 
-    setTitle('')
-    setPublished('')
-    setAuhtor('')
-    setGenres([])
-    setGenre('')
-  }
+    setTitle("");
+    setPublished("");
+    setAuhtor("");
+    setGenres([]);
+    setGenre("");
+  };
 
   const addGenre = () => {
-    setGenres(genres.concat(genre))
-    setGenre('')
-  }
+    setGenres(genres.concat(genre));
+    setGenre("");
+  };
 
   return (
     <div>
@@ -65,7 +68,7 @@ const NewBook = ({ show }) => {
         <div>
           published
           <input
-            type='number'
+            type="number"
             value={published}
             onChange={({ target }) => setPublished(target.value)}
           />
@@ -75,15 +78,15 @@ const NewBook = ({ show }) => {
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
           />
-          <button onClick={addGenre} type="button">add genre</button>
+          <button onClick={addGenre} type="button">
+            add genre
+          </button>
         </div>
-        <div>
-          genres: {genres.join(' ')}
-        </div>
-        <button type='submit'>create book</button>
+        <div>genres: {genres.join(" ")}</div>
+        <button type="submit">create book</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default NewBook
+export default NewBook;

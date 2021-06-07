@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 
-import { GET_USER, BOOK_ADDED } from "./queries";
+import { GET_USER, BOOK_ADDED, ALL_BOOKS } from "./queries";
 
 import Login from "./components/Login";
 import Authors from "./components/Authors";
@@ -35,9 +35,23 @@ const App = () => {
     }
   }, [token, getUser.data, setUserCallback]);
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map((book) => book.id).includes(object.id);
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS });
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) },
+      });
+    }
+  };
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       window.alert(`New book added: ${subscriptionData.data.bookAdded.title}`);
+      updateCacheWith(subscriptionData.data.bookAdded);
     },
   });
 
@@ -71,7 +85,7 @@ const App = () => {
 
       <Recommended show={page === "recommended"} user={user} />
 
-      <NewBook show={page === "add"} />
+      <NewBook show={page === "add"} updateCacheWith={updateCacheWith} />
 
       <Login setToken={setTokenCallback} show={page === "login"} />
     </div>
