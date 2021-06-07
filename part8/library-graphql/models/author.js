@@ -8,6 +8,12 @@ const schema = new mongoose.Schema({
     unique: true,
     minlength: 4,
   },
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
+  ],
   born: {
     type: Number,
   },

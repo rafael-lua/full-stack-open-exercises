@@ -123,7 +123,10 @@ const resolvers = {
         })
       }
     },
-    allAuthors: () => Author.find({}),
+    allAuthors: async (root, args) => {
+      const authorList = await Author.find({})
+      return Author.populate(authorList, { path: "books" })
+    },
     me: (root, args, context) => {
       return context.authenticatedUser
     },
@@ -144,6 +147,9 @@ const resolvers = {
         }
         const newBook = new Book({ ...args, author: authorExist })
         await newBook.save()
+
+        authorExist.books = authorExist.books.concat(newBook._id)
+        await authorExist.save()
 
         pubsub.publish("BOOK_ADDED", { bookAdded: newBook })
 
@@ -223,16 +229,7 @@ const resolvers = {
   },
 
   Author: {
-    bookCount: async (root) => {
-      const books = await Book.find({}).populate("author")
-      let booksCount = 0
-      for (let i = 0; i < books.length; i++) {
-        if (books[i].author.name === root.name) {
-          booksCount += 1
-        }
-      }
-      return booksCount
-    },
+    bookCount: (root) => root.books.length,
   },
 }
 
